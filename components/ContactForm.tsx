@@ -77,7 +77,7 @@ export default function ContactForm() {
 
       const data = await response.json()
 
-      if (!response.ok) {
+      if (!response.ok || !data.success) {
         setSubmitStatus('error')
         setErrorMessage(data.error || 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.')
         setIsSubmitting(false)
