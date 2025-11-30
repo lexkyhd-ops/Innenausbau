@@ -20,7 +20,6 @@ export default function ContactForm() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [csrfToken, setCsrfToken] = useState('')
-  const [lottieReady, setLottieReady] = useState(false)
 
   // Generate CSRF token on mount
   useEffect(() => {
@@ -55,55 +54,6 @@ export default function ContactForm() {
     }
   }, [])
 
-  // Check if dotlottie-wc is loaded
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    const checkLottie = () => {
-      try {
-        return customElements.get('dotlottie-wc') !== undefined
-      } catch {
-        return false
-      }
-    }
-
-    // Check immediately
-    if (checkLottie()) {
-      setLottieReady(true)
-      return
-    }
-
-    // Wait for custom element to be defined
-    customElements.whenDefined('dotlottie-wc')
-      .then(() => {
-        setLottieReady(true)
-      })
-      .catch(() => {
-        // If it fails, just use fallback
-        setLottieReady(false)
-      })
-
-    // Fallback: check periodically (max 3 seconds)
-    const interval = setInterval(() => {
-      if (checkLottie()) {
-        setLottieReady(true)
-        clearInterval(interval)
-      }
-    }, 100)
-
-    const timeout = setTimeout(() => {
-      clearInterval(interval)
-      // After timeout, use fallback
-      if (!checkLottie()) {
-        setLottieReady(false)
-      }
-    }, 3000)
-
-    return () => {
-      clearInterval(interval)
-      clearTimeout(timeout)
-    }
-  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -233,34 +183,44 @@ export default function ContactForm() {
 
   // Show success message instead of form after successful submission
   if (submitStatus === 'success') {
-    // Check if dotlottie-wc is available
-    const isLottieAvailable = typeof window !== 'undefined' && 
-      customElements.get('dotlottie-wc') !== undefined
-
     return (
       <div className="bg-green-50 border-2 border-green-400 rounded-lg p-8 text-center">
         <div className="mb-4 flex justify-center">
-          {isLottieAvailable ? (
-            <dotlottie-wc 
-              src="https://lottie.host/f68e4dbf-a7a1-4fc2-b23e-cdcb24cfc4de/o3cSAAtZRy.lottie" 
-              style={{ width: '128px', height: '128px' }} 
-              autoplay 
-            />
-          ) : (
-            <div className="w-32 h-32 flex items-center justify-center animate-pulse">
-              <svg className="w-24 h-24 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-          )}
+          <div className="success-checkmark">
+            <svg 
+              className="checkmark" 
+              xmlns="http://www.w3.org/2000/svg" 
+              viewBox="0 0 52 52"
+              style={{ width: '128px', height: '128px' }}
+            >
+              <circle 
+                className="checkmark-circle" 
+                cx="26" 
+                cy="26" 
+                r="25" 
+                fill="none"
+                stroke="#10b981"
+                strokeWidth="2"
+              />
+              <path 
+                className="checkmark-check" 
+                fill="none" 
+                stroke="#10b981" 
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M14.1 27.2l7.1 7.2 16.7-16.8"
+              />
+            </svg>
+          </div>
         </div>
-        <h3 className="text-2xl font-bold text-green-800 mb-3">
+        <h3 className="text-2xl font-bold text-green-800 mb-3 success-fade-in">
           Vielen Dank!
         </h3>
-        <p className="text-lg text-green-700 mb-2">
+        <p className="text-lg text-green-700 mb-2 success-fade-in-delay">
           Ihre Nachricht wurde erfolgreich gesendet.
         </p>
-        <p className="text-sm text-green-600">
+        <p className="text-sm text-green-600 success-fade-in-delay-2">
           Wir werden uns schnellstmöglich bei Ihnen melden.
         </p>
       </div>
