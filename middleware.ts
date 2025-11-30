@@ -10,10 +10,9 @@ function isMaintenanceMode(): boolean {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Allow access to admin, maintenance, and API routes
+  // Allow access to maintenance and API routes
   if (
     pathname.startsWith('/api/admin') ||
-    pathname.startsWith('/admin') ||
     pathname.startsWith('/maintenance') ||
     pathname.startsWith('/_next') ||
     pathname.startsWith('/images') ||
