@@ -112,7 +112,7 @@ export default function Datenschutz() {
               Cookies sind kleine Textdateien, die auf Ihrem Rechner abgelegt werden und die Ihr Browser speichert.
             </p>
             <p className="mt-2">
-              Die meisten der von uns verwendeten Cookies sind so genannte "Session-Cookies". Sie werden nach Ende Ihres 
+              Die meisten der von uns verwendeten Cookies sind so genannte &quot;Session-Cookies&quot;. Sie werden nach Ende Ihres 
               Besuchs automatisch gelöscht. Andere Cookies bleiben auf Ihrem Endgerät gespeichert, bis Sie diese löschen. 
               Diese Cookies ermöglichen es uns, Ihren Browser beim nächsten Besuch wiederzuerkennen.
             </p>
@@ -135,8 +135,8 @@ export default function Datenschutz() {
                   3.2 Externe Dienste (Google)
                 </h3>
                 <p>
-                  <strong>Google reCAPTCHA:</strong> Wir verwenden den Dienst "reCAPTCHA" der Firma Google Ireland Limited, 
-                  Gordon House, Barrow Street, Dublin 4, Irland (nachfolgend "Google"). reCAPTCHA dient dazu zu überprüfen, 
+                  <strong>Google reCAPTCHA:</strong> Wir verwenden den Dienst &quot;reCAPTCHA&quot; der Firma Google Ireland Limited, 
+                  Gordon House, Barrow Street, Dublin 4, Irland (nachfolgend &quot;Google&quot;). reCAPTCHA dient dazu zu überprüfen, 
                   ob die Dateneingabe auf unseren Internetseiten (z.B. in einem Kontaktformular) durch einen Menschen oder 
                   durch ein automatisiertes Programm erfolgt. Hierzu analysiert reCAPTCHA das Verhalten des Websitebesuchers 
                   anhand verschiedener Merkmale. Diese Analyse beginnt automatisch, sobald der Websitebesucher die Website 
@@ -164,7 +164,7 @@ export default function Datenschutz() {
                 </h3>
                 <p>
                   Diese Seite nutzt über eine API den Kartendienst Google Maps. Anbieter ist die Google Ireland Limited 
-                  ("Google"), Gordon House, Barrow Street, Dublin 4, Irland.
+                  (&quot;Google&quot;), Gordon House, Barrow Street, Dublin 4, Irland.
                 </p>
                 <p className="mt-2">
                   Zur Nutzung der Funktionen von Google Maps ist es notwendig, Ihre IP-Adresse zu speichern. Diese 
