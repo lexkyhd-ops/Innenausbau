@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     // Honeypot check - if filled, it's a bot
     if (honeypot) {
       return NextResponse.json(
-        { error: 'Bot erkannt' },
+        { success: false, error: 'Bot erkannt' },
         { status: 400 }
       )
     }
@@ -97,49 +97,49 @@ export async function POST(request: NextRequest) {
     // Server-side validation and sanitization
     if (!name || typeof name !== 'string' || name.trim().length < 2) {
       return NextResponse.json(
-        { error: 'Name ist erforderlich und muss mindestens 2 Zeichen lang sein.' },
+        { success: false, error: 'Name ist erforderlich und muss mindestens 2 Zeichen lang sein.' },
         { status: 400 }
       )
     }
 
     if (!validateLength('name', name)) {
       return NextResponse.json(
-        { error: `Name darf maximal ${MAX_LENGTHS.name} Zeichen lang sein.` },
+        { success: false, error: `Name darf maximal ${MAX_LENGTHS.name} Zeichen lang sein.` },
         { status: 400 }
       )
     }
 
     if (!email || typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json(
-        { error: 'Gültige E-Mail-Adresse ist erforderlich.' },
+        { success: false, error: 'Gültige E-Mail-Adresse ist erforderlich.' },
         { status: 400 }
       )
     }
 
     if (!validateLength('email', email)) {
       return NextResponse.json(
-        { error: `E-Mail-Adresse darf maximal ${MAX_LENGTHS.email} Zeichen lang sein.` },
+        { success: false, error: `E-Mail-Adresse darf maximal ${MAX_LENGTHS.email} Zeichen lang sein.` },
         { status: 400 }
       )
     }
 
     if (!message || typeof message !== 'string' || message.trim().length < 10) {
       return NextResponse.json(
-        { error: 'Nachricht ist erforderlich und muss mindestens 10 Zeichen lang sein.' },
+        { success: false, error: 'Nachricht ist erforderlich und muss mindestens 10 Zeichen lang sein.' },
         { status: 400 }
       )
     }
 
     if (!validateLength('message', message)) {
       return NextResponse.json(
-        { error: `Nachricht darf maximal ${MAX_LENGTHS.message} Zeichen lang sein.` },
+        { success: false, error: `Nachricht darf maximal ${MAX_LENGTHS.message} Zeichen lang sein.` },
         { status: 400 }
       )
     }
 
     if (!service || typeof service !== 'string' || service === '') {
       return NextResponse.json(
-        { error: 'Bitte wählen Sie eine Leistung aus.' },
+        { success: false, error: 'Bitte wählen Sie eine Leistung aus.' },
         { status: 400 }
       )
     }
@@ -157,7 +157,7 @@ export async function POST(request: NextRequest) {
       // If secret is set, token is required
       if (!recaptchaToken) {
         return NextResponse.json(
-          { error: 'reCAPTCHA-Validierung fehlgeschlagen.' },
+          { success: false, error: 'reCAPTCHA-Validierung fehlgeschlagen.' },
           { status: 400 }
         )
       }
@@ -178,7 +178,7 @@ export async function POST(request: NextRequest) {
         if (!recaptchaData.success) {
           console.error('reCAPTCHA verification failed:', recaptchaData)
           return NextResponse.json(
-            { error: 'reCAPTCHA-Validierung fehlgeschlagen. Bitte versuchen Sie es erneut.' },
+            { success: false, error: 'reCAPTCHA-Validierung fehlgeschlagen. Bitte versuchen Sie es erneut.' },
             { status: 400 }
           )
         }
@@ -188,7 +188,7 @@ export async function POST(request: NextRequest) {
         if (recaptchaData.score !== undefined && recaptchaData.score < 0.3) {
           console.warn('reCAPTCHA score too low:', recaptchaData.score)
           return NextResponse.json(
-            { error: 'reCAPTCHA-Validierung fehlgeschlagen. Bitte versuchen Sie es erneut.' },
+            { success: false, error: 'reCAPTCHA-Validierung fehlgeschlagen. Bitte versuchen Sie es erneut.' },
             { status: 400 }
           )
         }
@@ -232,7 +232,7 @@ export async function POST(request: NextRequest) {
     // Whitelist validation - reject unknown services
     if (!serviceNames[service]) {
       return NextResponse.json(
-        { error: 'Ungültige Leistung ausgewählt.' },
+        { success: false, error: 'Ungültige Leistung ausgewählt.' },
         { status: 400 }
       )
     }
