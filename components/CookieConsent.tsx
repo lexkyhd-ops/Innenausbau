@@ -51,6 +51,7 @@ export default function CookieConsent() {
                 Einige Cookies sind notwendig für den Betrieb der Website, während andere uns helfen, diese Website und die Nutzererfahrung zu verbessern 
                 (Tracking-Cookies). Sie können selbst entscheiden, ob Sie die Cookies zulassen möchten. 
                 Bitte beachten Sie, dass bei einer Ablehnung unter Umständen nicht mehr alle Funktionalitäten der Website zur Verfügung stehen.
+                Die Verwendung erfolgt gemäß den Bestimmungen der DSGVO und des österreichischen Telekommunikationsgesetzes (TKG 2021).
               </p>
               
               {showDetails && (

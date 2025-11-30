@@ -9,17 +9,23 @@ export default function Impressum() {
         <div className="prose prose-lg max-w-none space-y-8 text-gray-700">
           <section>
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Angaben gemäß § 5 TMG
+              Angaben gemäß § 5 ECG (E-Commerce-Gesetz)
             </h2>
             <div className="space-y-2">
               <p>
                 <strong>Innenausbauberisha KG</strong>
               </p>
-              <p>Einzelunternehmen</p>
+              <p>Kommanditgesellschaft (KG)</p>
               <p>
                 Favoritenstraße 155 22-24<br />
                 1100 Wien<br />
                 Österreich
+              </p>
+              <p className="mt-4">
+                <strong>Komplementär:</strong> Miftar Berisha
+              </p>
+              <p className="mt-4">
+                <strong>UID-Nummer:</strong> ATU66264311
               </p>
             </div>
           </section>
@@ -40,7 +46,7 @@ export default function Impressum() {
 
           <section>
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV
+              Verantwortlich für den Inhalt gemäß § 25 Mediengesetz
             </h2>
             <p>
               Miftar Berisha<br />
@@ -48,6 +54,10 @@ export default function Impressum() {
               Favoritenstraße 155 22-24<br />
               1100 Wien<br />
               Österreich
+            </p>
+            <p className="mt-4">
+              <strong>Mitgliedschaften:</strong><br />
+              Wirtschaftskammer Österreich (WKO)
             </p>
           </section>
 
@@ -65,7 +75,7 @@ export default function Impressum() {
                   Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. 
                   Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte 
                   können wir jedoch keine Gewähr übernehmen. Als Diensteanbieter 
-                  sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten 
+                  sind wir gemäß § 16 ECG (E-Commerce-Gesetz) für eigene Inhalte auf diesen Seiten 
                   nach den allgemeinen Gesetzen verantwortlich.
                 </p>
               </div>
@@ -89,13 +99,24 @@ export default function Impressum() {
                 </h3>
                 <p>
                   Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen 
-                  Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, 
-                  Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der 
+                  Seiten unterliegen dem österreichischen Urheberrecht (Urheberrechtsgesetz - UrhG). 
+                  Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der 
                   Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des 
                   jeweiligen Autors bzw. Erstellers.
                 </p>
               </div>
             </div>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">
+              Aufsichtsbehörde
+            </h2>
+            <p>
+              Sollte die Innenausbauberisha KG im Firmenbuch eingetragen sein, ist die zuständige Aufsichtsbehörde 
+              das Handelsgericht Wien. Bei Fragen zu gewerberechtlichen Angelegenheiten können Sie sich an die 
+              Wirtschaftskammer Österreich wenden.
+            </p>
           </section>
 
           <section>
@@ -115,6 +136,7 @@ export default function Impressum() {
               </a>.
             </p>
           </section>
+
         </div>
       </div>
     </div>
