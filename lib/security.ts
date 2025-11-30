@@ -1,16 +1,11 @@
-import DOMPurify from 'isomorphic-dompurify'
-
 /**
  * Sanitize HTML input to prevent XSS attacks
- * Removes all HTML tags and attributes
+ * Removes all HTML tags and escapes HTML entities
  */
 export function sanitizeHtml(input: string): string {
   if (!input) return ''
-  return DOMPurify.sanitize(input, {
-    ALLOWED_TAGS: [], // No HTML tags allowed
-    ALLOWED_ATTR: [],
-    KEEP_CONTENT: true, // Keep text content but remove tags
-  })
+  // Remove all HTML tags and escape HTML entities
+  return escapeHtml(input.replace(/<[^>]*>/g, ''))
 }
 
 /**
