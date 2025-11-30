@@ -117,18 +117,42 @@ export default function ContactForm() {
         }),
       })
 
-      const data = await response.json()
-
-      if (!response.ok) {
+      // Check if response has content
+      const contentType = response.headers.get('content-type')
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text()
+        console.error('Non-JSON response:', text)
         setSubmitStatus('error')
-        setErrorMessage(data.error || `Fehler ${response.status}: Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.`)
+        setErrorMessage(`Server-Fehler (${response.status}): Bitte versuchen Sie es später erneut.`)
         setIsSubmitting(false)
         return
       }
 
-      if (!data.success) {
+      let data
+      try {
+        const text = await response.text()
+        if (!text) {
+          throw new Error('Empty response')
+        }
+        data = JSON.parse(text)
+      } catch (parseError) {
+        console.error('JSON parse error:', parseError)
         setSubmitStatus('error')
-        setErrorMessage(data.error || 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.')
+        setErrorMessage('Ungültige Server-Antwort. Bitte versuchen Sie es erneut.')
+        setIsSubmitting(false)
+        return
+      }
+
+      if (!response.ok) {
+        setSubmitStatus('error')
+        setErrorMessage(data?.error || `Fehler ${response.status}: Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.`)
+        setIsSubmitting(false)
+        return
+      }
+
+      if (!data || !data.success) {
+        setSubmitStatus('error')
+        setErrorMessage(data?.error || 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.')
         setIsSubmitting(false)
         return
       }
