@@ -38,6 +38,15 @@ export default function LottieScript() {
       src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" 
       type="module" 
       strategy="afterInteractive"
+      onLoad={() => {
+        // Script loaded successfully
+        if (typeof window !== 'undefined') {
+          console.log('dotlottie-wc script loaded')
+        }
+      }}
+      onError={(e) => {
+        console.error('Failed to load dotlottie-wc script:', e)
+      }}
     />
   )
 }

@@ -57,40 +57,53 @@ export default function ContactForm() {
 
   // Check if dotlottie-wc is loaded
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
     const checkLottie = () => {
-      if (typeof window !== 'undefined' && customElements.get('dotlottie-wc')) {
-        setLottieReady(true)
-        return true
+      try {
+        return customElements.get('dotlottie-wc') !== undefined
+      } catch {
+        return false
       }
-      return false
     }
 
     // Check immediately
-    if (checkLottie()) return
-
-    // If not ready, wait for custom element to be defined
-    customElements.whenDefined('dotlottie-wc').then(() => {
+    if (checkLottie()) {
       setLottieReady(true)
-    })
+      return
+    }
 
-    // Fallback: check periodically
+    // Wait for custom element to be defined
+    customElements.whenDefined('dotlottie-wc')
+      .then(() => {
+        setLottieReady(true)
+      })
+      .catch(() => {
+        // If it fails, just use fallback
+        setLottieReady(false)
+      })
+
+    // Fallback: check periodically (max 3 seconds)
     const interval = setInterval(() => {
       if (checkLottie()) {
+        setLottieReady(true)
         clearInterval(interval)
       }
     }, 100)
 
-    // Cleanup after 5 seconds
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       clearInterval(interval)
-      // Set ready anyway to show fallback
-      if (!lottieReady) {
-        setLottieReady(true)
+      // After timeout, use fallback
+      if (!checkLottie()) {
+        setLottieReady(false)
       }
-    }, 5000)
+    }, 3000)
 
-    return () => clearInterval(interval)
-  }, [lottieReady])
+    return () => {
+      clearInterval(interval)
+      clearTimeout(timeout)
+    }
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -220,18 +233,22 @@ export default function ContactForm() {
 
   // Show success message instead of form after successful submission
   if (submitStatus === 'success') {
+    // Check if dotlottie-wc is available
+    const isLottieAvailable = typeof window !== 'undefined' && 
+      customElements.get('dotlottie-wc') !== undefined
+
     return (
       <div className="bg-green-50 border-2 border-green-400 rounded-lg p-8 text-center">
         <div className="mb-4 flex justify-center">
-          {lottieReady && typeof window !== 'undefined' && customElements.get('dotlottie-wc') ? (
+          {isLottieAvailable ? (
             <dotlottie-wc 
               src="https://lottie.host/f68e4dbf-a7a1-4fc2-b23e-cdcb24cfc4de/o3cSAAtZRy.lottie" 
               style={{ width: '128px', height: '128px' }} 
               autoplay 
             />
           ) : (
-            <div className="w-32 h-32 flex items-center justify-center">
-              <svg className="w-24 h-24 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-32 h-32 flex items-center justify-center animate-pulse">
+              <svg className="w-24 h-24 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
               </svg>
             </div>
