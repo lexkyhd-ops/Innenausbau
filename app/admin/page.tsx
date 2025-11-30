@@ -56,7 +56,11 @@ export default function AdminPage() {
         setMessage(data.message)
         setTimeout(() => setMessage(''), 3000)
       } else {
-        setMessage('Fehler beim Ändern des Wartungsmodus')
+        // Show the message from API (might contain instructions for Vercel)
+        setMessage(data.message || data.error || 'Fehler beim Ändern des Wartungsmodus')
+        if (data.note) {
+          setTimeout(() => setMessage(data.note), 4000)
+        }
       }
     } catch (error) {
       setMessage('Ein Fehler ist aufgetreten')

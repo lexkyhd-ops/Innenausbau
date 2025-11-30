@@ -1,10 +1,16 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+import { getMaintenanceMode } from '@/lib/maintenance'
 
 // Check if maintenance mode is enabled
 function isMaintenanceMode(): boolean {
   // Check environment variable first (for Vercel/production)
   if (process.env.MAINTENANCE_MODE === 'true') {
+    return true
+  }
+  
+  // Check in-memory store
+  if (getMaintenanceMode()) {
     return true
   }
   

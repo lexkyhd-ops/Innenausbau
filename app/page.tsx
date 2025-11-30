@@ -164,10 +164,10 @@ export default async function Home() {
     {/* Trusted Companies Section */}
     <TrustedCompanies
       companies={[
-        { name: "ISTA", logo: "https://ista.ac.at/wp-content/themes/wp-theme-ist-pubwww/assets/img/logo/ISTA_green3.svg" },
-        { name: "Hofer Parkett", logo: "https://firmen.wko.at/upload_images/2d942355-ad5f-427a-a86e-d91ad00c8b34/65613b45-0662-4ac1-81ce-2856f726089e.png" },
-        { name: "punkt9", logo: "https://www.punkt9.at/images/layout/branding_brown.jpg" },
-        { name: "degen-engineering", logo: "https://static.wixstatic.com/media/9af3fd_ca567b3185ca46be87a86bcfa0f0dbde~mv2.png/v1/fill/w_770,h_126,al_c,lg_1,q_85,enc_avif,quality_auto/9af3fd_ca567b3185ca46be87a86bcfa0f0dbde~mv2.png" },
+            { name: "ISTA", logo: "https://ista.ac.at/wp-content/themes/wp-theme-ist-pubwww/assets/img/logo/ISTA_green3.svg" },
+            { name: "Hofer Parkett", logo: "https://firmen.wko.at/upload_images/2d942355-ad5f-427a-a86e-d91ad00c8b34/65613b45-0662-4ac1-81ce-2856f726089e.png" },
+            { name: "punkt9", logo: "https://www.punkt9.at/images/layout/branding_brown.jpg" },
+            { name: "degen-engineering", logo: "https://static.wixstatic.com/media/9af3fd_ca567b3185ca46be87a86bcfa0f0dbde~mv2.png/v1/fill/w_770,h_126,al_c,lg_1,q_85,enc_avif,quality_auto/9af3fd_ca567b3185ca46be87a86bcfa0f0dbde~mv2.png" },
       ]}
     />
 
