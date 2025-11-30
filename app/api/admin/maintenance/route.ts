@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, readFile, unlink } from 'fs/promises'
 import { existsSync } from 'fs'
 import path from 'path'
 import { getMaintenanceMode, setMaintenanceMode } from '@/lib/maintenance'
@@ -20,18 +19,10 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    // Check environment variable
-    const envMaintenance = process.env.MAINTENANCE_MODE === 'true'
-    
-    // Check in-memory store
-    const memoryMaintenance = getMaintenanceMode()
-    
-    // Check file
-    const maintenanceFile = path.join(process.cwd(), '.maintenance')
-    const fileMaintenance = existsSync(maintenanceFile)
+    const enabled = getMaintenanceMode()
 
     return NextResponse.json({
-      enabled: envMaintenance || memoryMaintenance || fileMaintenance,
+      enabled,
     })
   } catch (error) {
     console.error('Error checking maintenance status:', error)
@@ -54,31 +45,30 @@ export async function POST(request: NextRequest) {
   try {
     const { enabled } = await request.json()
     
-    // Set in-memory store (works on Vercel and locally)
-    setMaintenanceMode(enabled)
+    // On Vercel, we can't modify files, so we need to use environment variables
+    const isVercel = process.env.VERCEL === '1'
     
-    // Also try to update file for local development (optional)
-    try {
-      const maintenanceFile = path.join(process.cwd(), '.maintenance')
-      if (enabled) {
-        // Enable maintenance mode by creating file
-        await writeFile(maintenanceFile, JSON.stringify({ enabled: true, timestamp: new Date().toISOString() }), 'utf-8')
-      } else {
-        // Disable maintenance mode by deleting file
-        if (existsSync(maintenanceFile)) {
-          await unlink(maintenanceFile)
-        }
-      }
-    } catch (fileError) {
-      // File operations might fail on Vercel, but that's okay - we use in-memory store
-      console.log('File-based maintenance mode not available (this is normal on Vercel)')
+    if (isVercel) {
+      // On Vercel, inform user that they need to set environment variable
+      return NextResponse.json({
+        success: false,
+        enabled: getMaintenanceMode(),
+        message: 'Auf Vercel muss der Wartungsmodus über Environment-Variablen gesteuert werden.',
+        instructions: {
+          enable: 'Setzen Sie MAINTENANCE_MODE=true in den Vercel Environment Variables',
+          disable: 'Entfernen Sie MAINTENANCE_MODE oder setzen Sie MAINTENANCE_MODE=false',
+          note: 'Nach dem Ändern der Environment-Variable ist ein neuer Deploy erforderlich.',
+        },
+      })
     }
+
+    // Local development: use file-based approach
+    await setMaintenanceMode(enabled)
 
     return NextResponse.json({
       success: true,
       enabled,
       message: enabled ? 'Wartungsmodus aktiviert' : 'Wartungsmodus deaktiviert',
-      note: process.env.VERCEL ? 'Hinweis: Der Status wird nach einem Neustart zurückgesetzt. Für persistente Einstellungen verwenden Sie die Environment-Variable MAINTENANCE_MODE.' : undefined,
     })
   } catch (error) {
     console.error('Error toggling maintenance mode:', error)

@@ -56,10 +56,17 @@ export default function AdminPage() {
         setMessage(data.message)
         setTimeout(() => setMessage(''), 3000)
       } else {
-        // Show the message from API (might contain instructions for Vercel)
-        setMessage(data.message || data.error || 'Fehler beim Ändern des Wartungsmodus')
-        if (data.note) {
-          setTimeout(() => setMessage(data.note), 4000)
+        // Show instructions for Vercel
+        if (data.instructions) {
+          const instructions = data.instructions
+          setMessage(
+            `${data.message}\n\n` +
+            `Aktivieren: ${instructions.enable}\n` +
+            `Deaktivieren: ${instructions.disable}\n` +
+            `Hinweis: ${instructions.note}`
+          )
+        } else {
+          setMessage(data.message || data.error || 'Fehler beim Ändern des Wartungsmodus')
         }
       }
     } catch (error) {

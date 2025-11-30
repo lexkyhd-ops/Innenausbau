@@ -4,29 +4,7 @@ import { getMaintenanceMode } from '@/lib/maintenance'
 
 // Check if maintenance mode is enabled
 function isMaintenanceMode(): boolean {
-  // Check environment variable first (for Vercel/production)
-  if (process.env.MAINTENANCE_MODE === 'true') {
-    return true
-  }
-  
-  // Check in-memory store
-  if (getMaintenanceMode()) {
-    return true
-  }
-  
-  // Check local file (for development/local)
-  try {
-    const fs = require('fs')
-    const path = require('path')
-    const maintenanceFile = path.join(process.cwd(), '.maintenance')
-    if (fs.existsSync(maintenanceFile)) {
-      return true
-    }
-  } catch (error) {
-    // File system not available, continue
-  }
-  
-  return false
+  return getMaintenanceMode()
 }
 
 export function middleware(request: NextRequest) {
