@@ -17,9 +17,10 @@ export function generateCsrfSecret(): string {
  * Generate a CSRF token from secret
  */
 export function generateCsrfToken(secret: string): string {
+  const salt = process.env.CSRF_SECRET_SALT || 'default-salt-change-in-production'
   return crypto
     .createHash('sha256')
-    .update(secret + process.env.CSRF_SECRET_SALT || 'default-salt-change-in-production')
+    .update(secret + salt)
     .digest('hex')
     .substring(0, CSRF_TOKEN_LENGTH)
 }

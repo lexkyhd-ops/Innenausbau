@@ -94,12 +94,18 @@ export default function ContactForm() {
     setIsSubmitting(true)
 
     try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+      
+      // Only add CSRF token if available
+      if (csrfToken) {
+        headers['X-CSRF-Token'] = csrfToken
+      }
+
       const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken,
-        },
+        headers,
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
@@ -113,7 +119,14 @@ export default function ContactForm() {
 
       const data = await response.json()
 
-      if (!response.ok || !data.success) {
+      if (!response.ok) {
+        setSubmitStatus('error')
+        setErrorMessage(data.error || `Fehler ${response.status}: Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.`)
+        setIsSubmitting(false)
+        return
+      }
+
+      if (!data.success) {
         setSubmitStatus('error')
         setErrorMessage(data.error || 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.')
         setIsSubmitting(false)
@@ -133,7 +146,11 @@ export default function ContactForm() {
     } catch (error) {
       console.error('Form submission error:', error)
       setSubmitStatus('error')
-      setErrorMessage('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.')
+      setErrorMessage(
+        error instanceof Error 
+          ? `Fehler: ${error.message}` 
+          : 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.'
+      )
     } finally {
       setIsSubmitting(false)
     }

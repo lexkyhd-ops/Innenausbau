@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     const ip = getClientIP(request)
     if (!checkRateLimit(ip)) {
       return NextResponse.json(
-        { error: 'Zu viele Anfragen. Bitte versuchen Sie es später erneut.' },
+        { success: false, error: 'Zu viele Anfragen. Bitte versuchen Sie es später erneut.' },
         { status: 429 }
       )
     }
@@ -66,14 +66,24 @@ export async function POST(request: NextRequest) {
     // Only enforce CSRF if secret exists (user has visited page and got token)
     if (csrfSecret) {
       if (!csrfToken || !verifyCsrfToken(csrfSecret, csrfToken)) {
+        console.error('CSRF validation failed', { hasToken: !!csrfToken, hasSecret: !!csrfSecret })
         return NextResponse.json(
-          { error: 'Ungültige Anfrage. Bitte laden Sie die Seite neu.' },
+          { success: false, error: 'Ungültige Anfrage. Bitte laden Sie die Seite neu.' },
           { status: 403 }
         )
       }
     }
 
-    const body = await request.json()
+    let body
+    try {
+      body = await request.json()
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError)
+      return NextResponse.json(
+        { success: false, error: 'Ungültige Anfrage-Daten.' },
+        { status: 400 }
+      )
+    }
     let { name, email, phone, service, message, recaptchaToken, honeypot } = body
 
     // Honeypot check - if filled, it's a bot
