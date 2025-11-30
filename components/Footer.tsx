@@ -64,7 +64,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <FiMail className="text-primary-600" />
-                <span>innenausbauberisha-kg@hotmail.com</span>
+                <span>kontakt@berishakg.at</span>
               </li>
               <li className="flex items-center gap-2">
                 <FiMapPin className="text-primary-600" />

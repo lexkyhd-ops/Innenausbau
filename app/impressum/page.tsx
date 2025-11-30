@@ -39,7 +39,7 @@ export default function Impressum() {
                 <strong>Telefon:</strong> +436641325995
               </p>
               <p>
-                <strong>E-Mail:</strong> innenausbauberisha-kg@hotmail.com
+                <strong>E-Mail:</strong> info@berishakg.at
               </p>
             </div>
           </section>

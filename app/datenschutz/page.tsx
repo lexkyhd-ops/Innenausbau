@@ -44,7 +44,7 @@ export default function Datenschutz() {
               <p>
                 <strong>Kontakt:</strong><br />
                 Telefon: +436641325995<br />
-                E-Mail: innenausbauberisha-kg@hotmail.com
+                E-Mail: info@berishakg.at
               </p>
             </div>
           </section>
@@ -276,7 +276,7 @@ export default function Datenschutz() {
               Favoritenstraße 155 22-24<br />
               1100 Wien<br />
               Österreich<br />
-              E-Mail: innenausbauberisha-kg@hotmail.com<br />
+              E-Mail: miftar@berishakg.at<br />
               Telefon: +436641325995
             </p>
           </section>

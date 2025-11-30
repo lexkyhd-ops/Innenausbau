@@ -49,7 +49,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-800 mb-1">E-Mail</h3>
-                  <p className="text-gray-600">innenausbauberisha-kg@hotmail.com</p>
+                  <p className="text-gray-600">kontakt@berishakg.at</p>
                   <p className="text-sm text-gray-500">Wir antworten innerhalb von 24 Stunden</p>
                 </div>
               </div>
