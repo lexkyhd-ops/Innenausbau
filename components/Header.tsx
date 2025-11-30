@@ -27,9 +27,9 @@ export default function Header() {
             <Image 
               src={logoTextBlack} 
               alt="Innenausbauberisha" 
-              width={200} 
-              height={50}
-              className="h-12 w-auto"
+              width={500} 
+              height={125}
+              className="h-24 md:h-32 lg:h-40 w-auto"
             />
           </Link>
           
