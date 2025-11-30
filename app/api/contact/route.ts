@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
+import { sanitizeHtml, sanitizeEmail, sanitizePhone, sanitizeService, escapeHtml, validateLength, MAX_LENGTHS } from '@/lib/security'
+import { verifyCsrfToken } from '@/lib/csrf'
 
 // Simple in-memory rate limiting (in production, use Redis or similar)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
@@ -27,9 +29,23 @@ function checkRateLimit(ip: string): boolean {
 }
 
 function getClientIP(request: NextRequest): string {
+  // On Vercel, use trusted headers
+  if (process.env.VERCEL) {
+    // Vercel provides trusted headers
+    return request.headers.get('x-vercel-forwarded-for') || 
+           request.headers.get('x-real-ip') || 
+           'unknown'
+  }
+  
+  // For other platforms, trust x-forwarded-for only if behind proxy
   const forwarded = request.headers.get('x-forwarded-for')
-  const realIP = request.headers.get('x-real-ip')
-  return forwarded?.split(',')[0] || realIP || 'unknown'
+  if (forwarded) {
+    // Take last IP (original client) if behind multiple proxies
+    const ips = forwarded.split(',').map(ip => ip.trim()).filter(ip => ip)
+    return ips[ips.length - 1] || 'unknown'
+  }
+  
+  return request.headers.get('x-real-ip') || 'unknown'
 }
 
 export async function POST(request: NextRequest) {
@@ -43,8 +59,22 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // CSRF protection (skip if no secret exists - first visit)
+    const csrfToken = request.headers.get('x-csrf-token')
+    const csrfSecret = request.cookies.get('csrf-secret')?.value
+
+    // Only enforce CSRF if secret exists (user has visited page and got token)
+    if (csrfSecret) {
+      if (!csrfToken || !verifyCsrfToken(csrfSecret, csrfToken)) {
+        return NextResponse.json(
+          { error: 'Ungültige Anfrage. Bitte laden Sie die Seite neu.' },
+          { status: 403 }
+        )
+      }
+    }
+
     const body = await request.json()
-    const { name, email, phone, service, message, recaptchaToken, honeypot } = body
+    let { name, email, phone, service, message, recaptchaToken, honeypot } = body
 
     // Honeypot check - if filled, it's a bot
     if (honeypot) {
@@ -54,34 +84,62 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Server-side validation
-    if (!name || name.trim().length < 2) {
+    // Server-side validation and sanitization
+    if (!name || typeof name !== 'string' || name.trim().length < 2) {
       return NextResponse.json(
         { error: 'Name ist erforderlich und muss mindestens 2 Zeichen lang sein.' },
         { status: 400 }
       )
     }
 
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!validateLength('name', name)) {
+      return NextResponse.json(
+        { error: `Name darf maximal ${MAX_LENGTHS.name} Zeichen lang sein.` },
+        { status: 400 }
+      )
+    }
+
+    if (!email || typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return NextResponse.json(
         { error: 'Gültige E-Mail-Adresse ist erforderlich.' },
         { status: 400 }
       )
     }
 
-    if (!message || message.trim().length < 10) {
+    if (!validateLength('email', email)) {
+      return NextResponse.json(
+        { error: `E-Mail-Adresse darf maximal ${MAX_LENGTHS.email} Zeichen lang sein.` },
+        { status: 400 }
+      )
+    }
+
+    if (!message || typeof message !== 'string' || message.trim().length < 10) {
       return NextResponse.json(
         { error: 'Nachricht ist erforderlich und muss mindestens 10 Zeichen lang sein.' },
         { status: 400 }
       )
     }
 
-    if (!service || service === '') {
+    if (!validateLength('message', message)) {
+      return NextResponse.json(
+        { error: `Nachricht darf maximal ${MAX_LENGTHS.message} Zeichen lang sein.` },
+        { status: 400 }
+      )
+    }
+
+    if (!service || typeof service !== 'string' || service === '') {
       return NextResponse.json(
         { error: 'Bitte wählen Sie eine Leistung aus.' },
         { status: 400 }
       )
     }
+
+    // Sanitize all inputs
+    name = sanitizeHtml(name.trim())
+    email = sanitizeEmail(email.trim())
+    phone = phone ? sanitizePhone(phone.trim()) : ''
+    service = sanitizeService(service.trim())
+    message = sanitizeHtml(message.trim())
 
     // Verify reCAPTCHA token (only if secret key is configured)
     const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY
@@ -134,7 +192,7 @@ export async function POST(request: NextRequest) {
       console.warn('reCAPTCHA_SECRET_KEY not set - skipping validation')
     }
 
-    // Map service values to readable names
+    // Map service values to readable names (whitelist approach)
     const serviceNames: Record<string, string> = {
       'trockenbau-rigips-waende': 'Errichten von Rigips-Wänden',
       'trockenbau-rigips-decken': 'Rigips-Decken',
@@ -161,7 +219,15 @@ export async function POST(request: NextRequest) {
       'sonstiges': 'Sonstiges',
     }
 
-    const serviceName = serviceNames[service] || service
+    // Whitelist validation - reject unknown services
+    if (!serviceNames[service]) {
+      return NextResponse.json(
+        { error: 'Ungültige Leistung ausgewählt.' },
+        { status: 400 }
+      )
+    }
+
+    const serviceName = serviceNames[service]
 
     // Send email using Resend
     const resendApiKey = process.env.RESEND_API_KEY
@@ -210,25 +276,25 @@ export async function POST(request: NextRequest) {
               <div class="content">
                 <div class="field">
                   <div class="label">Name:</div>
-                  <div class="value">${name}</div>
+                  <div class="value">${escapeHtml(name)}</div>
                 </div>
                 <div class="field">
                   <div class="label">E-Mail:</div>
-                  <div class="value"><a href="mailto:${email}">${email}</a></div>
+                  <div class="value"><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></div>
                 </div>
                 ${phone ? `
                 <div class="field">
                   <div class="label">Telefon:</div>
-                  <div class="value"><a href="tel:${phone}">${phone}</a></div>
+                  <div class="value"><a href="tel:${escapeHtml(phone)}">${escapeHtml(phone)}</a></div>
                 </div>
                 ` : ''}
                 <div class="field">
                   <div class="label">Gewünschte Leistung:</div>
-                  <div class="value">${serviceName}</div>
+                  <div class="value">${escapeHtml(serviceName)}</div>
                 </div>
                 <div class="field">
                   <div class="label">Nachricht:</div>
-                  <div class="message-box">${message.replace(/\n/g, '<br>')}</div>
+                  <div class="message-box">${escapeHtml(message).replace(/\n/g, '<br>')}</div>
                 </div>
               </div>
             </div>
@@ -281,14 +347,14 @@ ${message}
                   <h1>Vielen Dank für Ihre Anfrage!</h1>
                 </div>
                 <div class="content">
-                  <p>Sehr geehrte/r ${name},</p>
+                  <p>Sehr geehrte/r ${escapeHtml(name)},</p>
                   <p>vielen Dank für Ihre Kontaktanfrage. Wir haben Ihre Nachricht erhalten und werden uns schnellstmöglich bei Ihnen melden.</p>
                   <div class="message">
                     <strong>Ihre Anfrage:</strong><br>
-                    <strong>Leistung:</strong> ${serviceName}<br>
-                    ${phone ? `<strong>Telefon:</strong> ${phone}<br>` : ''}
+                    <strong>Leistung:</strong> ${escapeHtml(serviceName)}<br>
+                    ${phone ? `<strong>Telefon:</strong> ${escapeHtml(phone)}<br>` : ''}
                     <strong>Nachricht:</strong><br>
-                    ${message.replace(/\n/g, '<br>')}
+                    ${escapeHtml(message).replace(/\n/g, '<br>')}
                   </div>
                   <p>Mit freundlichen Grüßen,<br>Miftar Berisha<br>Innenausbau Berisha</p>
                 </div>

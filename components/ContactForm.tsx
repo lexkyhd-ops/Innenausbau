@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+import { MAX_LENGTHS } from '@/lib/security'
 
 export default function ContactForm() {
   // Get reCAPTCHA hook - will be undefined if provider is not available
@@ -18,6 +19,40 @@ export default function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
+  const [csrfToken, setCsrfToken] = useState('')
+
+  // Generate CSRF token on mount
+  useEffect(() => {
+    // Get or create CSRF secret
+    let csrfSecret = document.cookie
+      .split('; ')
+      .find(row => row.startsWith('csrf-secret='))
+      ?.split('=')[1]
+
+    if (!csrfSecret && typeof window !== 'undefined' && window.crypto) {
+      // Generate new secret using Web Crypto API
+      const array = new Uint8Array(32)
+      window.crypto.getRandomValues(array)
+      csrfSecret = Array.from(array)
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('')
+      
+      // Set cookie
+      document.cookie = `csrf-secret=${csrfSecret}; path=/; max-age=86400; SameSite=Strict`
+    }
+
+    if (csrfSecret) {
+      // Generate token from secret
+      fetch('/api/csrf-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ secret: csrfSecret }),
+      })
+        .then(res => res.json())
+        .then(data => setCsrfToken(data.token))
+        .catch(() => {}) // Fail silently, CSRF will be checked server-side
+    }
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -63,6 +98,7 @@ export default function ContactForm() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken,
         },
         body: JSON.stringify({
           name: formData.name,
@@ -138,6 +174,7 @@ export default function ContactForm() {
           id="name"
           name="name"
           required
+          maxLength={MAX_LENGTHS.name}
           value={formData.name}
           onChange={handleChange}
           className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
@@ -153,6 +190,7 @@ export default function ContactForm() {
           id="email"
           name="email"
           required
+          maxLength={MAX_LENGTHS.email}
           value={formData.email}
           onChange={handleChange}
           className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
@@ -167,6 +205,7 @@ export default function ContactForm() {
           type="tel"
           id="phone"
           name="phone"
+          maxLength={MAX_LENGTHS.phone}
           value={formData.phone}
           onChange={handleChange}
           className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
@@ -227,6 +266,7 @@ export default function ContactForm() {
           name="message"
           required
           rows={5}
+          maxLength={MAX_LENGTHS.message}
           value={formData.message}
           onChange={handleChange}
           className="w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
