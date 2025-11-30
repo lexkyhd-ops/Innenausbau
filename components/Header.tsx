@@ -21,15 +21,15 @@ export default function Header() {
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
-      <nav className="container mx-auto pl-0 pr-4 md:pl-2 md:pr-4 py-4">
+      <nav className="container mx-auto pl-0 pr-4 md:pl-2 md:pr-4 py-2">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center">
             <Image 
               src={logoTextBlack} 
               alt="Innenausbauberisha" 
-              width={500} 
-              height={125}
-              className="h-24 md:h-32 lg:h-40 w-auto"
+              width={300} 
+              height={60}
+              className="h-12 md:h-16 lg:h-20 w-auto"
             />
           </Link>
           
@@ -60,7 +60,7 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div id="mobile-menu" className="md:hidden mt-4 pb-4" role="navigation" aria-label="Hauptnavigation">
+          <div id="mobile-menu" className="md:hidden mt-2 pb-2" role="navigation" aria-label="Hauptnavigation">
             <div className="flex flex-col space-y-3">
               {navLinks.map((link) => (
                 <Link
@@ -79,4 +79,3 @@ export default function Header() {
     </header>
   )
 }
-
