@@ -108,6 +108,12 @@ export default function Impressum() {
               Name, Anschrift oder E-Mail-Adressen) erhoben werden, erfolgt dies, soweit 
               möglich, stets auf freiwilliger Basis.
             </p>
+            <p className="mt-4">
+              Ausführliche Informationen zum Datenschutz finden Sie in unserer{' '}
+              <a href="/datenschutz" className="text-primary-600 hover:underline font-semibold">
+                Datenschutzerklärung
+              </a>.
+            </p>
           </section>
         </div>
       </div>

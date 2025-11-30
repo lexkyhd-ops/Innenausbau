@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import Script from 'next/script'
 import './globals.css'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import ReCaptchaProvider from '@/components/ReCaptchaProvider'
+import CookieConsent from '@/components/CookieConsent'
+import LottieScript from '@/components/LottieScript'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -29,17 +30,14 @@ export default function RootLayout({
   return (
     <html lang="de">
       <body className={inter.className}>
-        <Script 
-          src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" 
-          type="module" 
-          strategy="lazyOnload"
-        />
+        <LottieScript />
         <ReCaptchaProvider>
           <Header />
           <main className="min-h-screen">
             {children}
           </main>
           <Footer />
+          <CookieConsent />
         </ReCaptchaProvider>
       </body>
     </html>

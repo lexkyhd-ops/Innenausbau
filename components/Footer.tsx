@@ -46,6 +46,11 @@ export default function Footer() {
                   Impressum
                 </Link>
               </li>
+              <li>
+                <Link href="/datenschutz" className="text-gray-700 hover:text-primary-600 transition-colors">
+                  Datenschutz
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -71,6 +76,15 @@ export default function Footer() {
 
         <div className="border-t border-gray-300 mt-8 pt-8 text-center text-gray-600">
           <p>&copy; {new Date().getFullYear()} Innenausbauberisha. Alle Rechte vorbehalten.</p>
+          <div className="mt-2 flex flex-wrap justify-center gap-4 text-sm">
+            <Link href="/impressum" className="hover:text-primary-600 transition-colors">
+              Impressum
+            </Link>
+            <span>•</span>
+            <Link href="/datenschutz" className="hover:text-primary-600 transition-colors">
+              Datenschutz
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
