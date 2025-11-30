@@ -141,7 +141,7 @@ export default function RotatingGallery({ imagesByCategory, interval = 4000 }: R
   if (categories.length === 0) return null
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
+    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-6 sm:mb-8">
       {categories.map((category) => {
         const images = imagesByCategory[category]
         if (!images || images.length === 0) return null
@@ -166,9 +166,10 @@ export default function RotatingGallery({ imagesByCategory, interval = 4000 }: R
         return (
           <div
             key={category}
-            className="relative aspect-square overflow-hidden rounded-lg group bg-white"
+            className="relative aspect-square overflow-hidden rounded-lg sm:rounded-xl group bg-white"
             style={{
-              boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 8px 2px rgba(0, 0, 0, 0.08), 0 1px 4px 1px rgba(0, 0, 0, 0.06)'
+              boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 8px 2px rgba(0, 0, 0, 0.08), 0 1px 4px 1px rgba(0, 0, 0, 0.06)',
+              transition: 'box-shadow 0.3s ease-in-out'
             }}
             onMouseEnter={(e) => {
               if (typeof window !== 'undefined' && window.innerWidth >= 640) {

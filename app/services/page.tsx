@@ -61,88 +61,97 @@ export default function Services() {
   ]
 
   return (
-    <div className="py-16">
+    <div className="py-12 sm:py-16">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+        <div className="text-center mb-10 sm:mb-12 md:mb-16">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-2 sm:mb-3 md:mb-4">
             Unsere Leistungen
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Von der Planung bis zur Fertigstellung – wir bieten professionelle Handwerksarbeiten 
             in höchster Qualität für alle Ihre Projekte.
           </p>
         </div>
 
-        <div className="space-y-24">
+        <div className="space-y-8 sm:space-y-10 md:space-y-12 lg:space-y-16">
           {services.map((service, index) => (
             <div
               key={service.id}
               id={service.id}
-              className={`flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-12`}
+              className="relative bg-gradient-to-br from-primary-50 via-white to-primary-50 rounded-2xl shadow-no-offset overflow-hidden border border-primary-100 pulse-blue"
             >
-              <div className="flex-1">
-                <div className="mb-6">
-                  <h2 className="text-3xl md:text-4xl font-bold text-gray-800">
-                    {service.title}
-                  </h2>
-                </div>
-                <p className="text-lg text-gray-600 mb-6">
-                  {service.description}
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                      Leistungsumfang
-                    </h3>
-                    <ul className="space-y-2">
-                      {service.details.map((detail, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span className="text-primary-600 mt-1">✓</span>
-                          <span className="text-gray-700">{detail}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                      Anwendungsbereiche
-                    </h3>
-                    <ul className="space-y-2">
-                      {service.applications.map((app, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span className="text-primary-600 mt-1">✓</span>
-                          <span className="text-gray-700">{app}</span>
-                        </li>
-                      ))}
-                    </ul>
+              {/* Decorative Elements */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-primary-200/20 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-300/20 rounded-full -ml-32 -mb-32 blur-3xl"></div>
+              
+              <div className={`relative z-10 flex flex-col ${index % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-6 sm:gap-8 md:gap-10 lg:gap-12 p-6 sm:p-8 md:p-10 lg:p-12`}>
+                {/* Image - shown first on mobile */}
+                <div className="flex-1 w-full order-1 lg:order-none">
+                  <div className="relative rounded-lg sm:rounded-xl aspect-[4/3] sm:aspect-square overflow-hidden shadow-lg">
+                    <Image
+                      src={service.image}
+                      alt={service.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      className="object-cover"
+                    />
                   </div>
                 </div>
-              </div>
-              <div className="flex-1">
-                <div className="relative rounded-lg aspect-square overflow-hidden">
-                  <Image
-                    src={service.image}
-                    alt={service.title}
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover"
-                  />
+
+                {/* Content */}
+                <div className="flex-1 w-full order-2">
+                  <div className="mb-4 sm:mb-5 md:mb-6">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800">
+                      {service.title}
+                    </h2>
+                  </div>
+                  <p className="text-base sm:text-lg text-gray-600 mb-5 sm:mb-6 leading-relaxed">
+                    {service.description}
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+                    <div>
+                      <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-3 sm:mb-4">
+                        Leistungsumfang
+                      </h3>
+                      <ul className="space-y-1.5 sm:space-y-2">
+                        {service.details.map((detail, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <span className="text-primary-600 mt-0.5 sm:mt-1 text-lg sm:text-xl flex-shrink-0">✓</span>
+                            <span className="text-sm sm:text-base text-gray-700 leading-relaxed">{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-3 sm:mb-4">
+                        Anwendungsbereiche
+                      </h3>
+                      <ul className="space-y-1.5 sm:space-y-2">
+                        {service.applications.map((app, i) => (
+                          <li key={i} className="flex items-start gap-2">
+                            <span className="text-primary-600 mt-0.5 sm:mt-1 text-lg sm:text-xl flex-shrink-0">✓</span>
+                            <span className="text-sm sm:text-base text-gray-700 leading-relaxed">{app}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-16 bg-primary-50 rounded-lg p-8 text-center">
-          <h3 className="text-2xl font-bold text-gray-800 mb-4">
+        <div className="mt-10 sm:mt-12 md:mt-16 bg-primary-50 rounded-lg sm:rounded-xl p-6 sm:p-8 text-center">
+          <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-3 sm:mb-4">
             Haben Sie Fragen zu unseren Leistungen?
           </h3>
-          <p className="text-gray-600 mb-6">
+          <p className="text-sm sm:text-base text-gray-600 mb-5 sm:mb-6 leading-relaxed">
             Kontaktieren Sie uns für eine kostenlose Beratung und ein individuelles Angebot.
           </p>
           <a
             href="/contact"
-            className="inline-block bg-primary-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors shadow-lg"
+            className="inline-block bg-primary-500 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-primary-600 transition-colors shadow-lg hover:shadow-xl min-h-[44px] text-sm sm:text-base"
           >
             Jetzt Kontakt aufnehmen
           </a>

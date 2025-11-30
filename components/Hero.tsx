@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import titleImage from '@/app/images/TitleImage.jpg'
 
 export default function Hero() {
   return (
@@ -7,10 +8,9 @@ export default function Hero() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1920&h=1080&fit=crop"
-          alt="Malerarbeiten Hintergrund"
+          src={titleImage}
+          alt="Innenausbauberisha"
           fill
-          sizes="100vw"
           className="object-cover"
           priority
         />

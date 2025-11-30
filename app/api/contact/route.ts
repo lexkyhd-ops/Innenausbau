@@ -277,85 +277,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    try {
-      const resend = new Resend(resendApiKey)
-
-      const emailHtml = `
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <meta charset="utf-8">
-            <style>
-              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-              .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-              .header { background-color: #0ea5e9; color: white; padding: 20px; text-align: center; }
-              .content { background-color: #f9fafb; padding: 20px; border: 1px solid #e5e7eb; }
-              .field { margin-bottom: 15px; }
-              .label { font-weight: bold; color: #374151; }
-              .value { color: #6b7280; margin-top: 5px; }
-              .message-box { background-color: white; padding: 15px; border-left: 4px solid #0ea5e9; margin-top: 10px; }
-            </style>
-          </head>
-          <body>
-            <div class="container">
-              <div class="header">
-                <h1>Neue Kontaktanfrage</h1>
-              </div>
-              <div class="content">
-                <div class="field">
-                  <div class="label">Name:</div>
-                  <div class="value">${escapeHtml(name)}</div>
-                </div>
-                <div class="field">
-                  <div class="label">E-Mail:</div>
-                  <div class="value"><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></div>
-                </div>
-                ${phone ? `
-                <div class="field">
-                  <div class="label">Telefon:</div>
-                  <div class="value"><a href="tel:${escapeHtml(phone)}">${escapeHtml(phone)}</a></div>
-                </div>
-                ` : ''}
-                <div class="field">
-                  <div class="label">Gewünschte Leistung:</div>
-                  <div class="value">${escapeHtml(serviceName)}</div>
-                </div>
-                <div class="field">
-                  <div class="label">Nachricht:</div>
-                  <div class="message-box">${escapeHtml(message).replace(/\n/g, '<br>')}</div>
-                </div>
-              </div>
-            </div>
-          </body>
-        </html>
-      `
-
-      const emailText = `
-Neue Kontaktanfrage
-
-Name: ${name}
-E-Mail: ${email}
-${phone ? `Telefon: ${phone}` : ''}
-Gewünschte Leistung: ${serviceName}
-
-Nachricht:
-${message}
-      `.trim()
-
-      await resend.emails.send({
-        from: 'Berisha KG <info@berishakg.at>',
-        to: emailTo,
-        replyTo: email,
-        subject: `Neue Anfrage von ${name}`,
-        html: emailHtml,
-        text: emailText,
-      })
-
-      console.log('Email sent successfully to:', emailTo)
-
-      // Send confirmation email to the customer
       try {
-        const confirmationHtml = `
+        const resend = new Resend(resendApiKey)
+
+        const emailHtml = `
           <!DOCTYPE html>
           <html>
             <head>
@@ -365,37 +290,112 @@ ${message}
                 .container { max-width: 600px; margin: 0 auto; padding: 20px; }
                 .header { background-color: #0ea5e9; color: white; padding: 20px; text-align: center; }
                 .content { background-color: #f9fafb; padding: 20px; border: 1px solid #e5e7eb; }
-                .message { background-color: white; padding: 15px; border-left: 4px solid #0ea5e9; margin-top: 10px; }
-                .footer { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280; text-align: center; }
+                .field { margin-bottom: 15px; }
+                .label { font-weight: bold; color: #374151; }
+                .value { color: #6b7280; margin-top: 5px; }
+                .message-box { background-color: white; padding: 15px; border-left: 4px solid #0ea5e9; margin-top: 10px; }
               </style>
             </head>
             <body>
               <div class="container">
                 <div class="header">
-                  <h1>Vielen Dank für Ihre Anfrage!</h1>
+                  <h1>Neue Kontaktanfrage</h1>
                 </div>
                 <div class="content">
-                  <p>Sehr geehrte/r ${escapeHtml(name)},</p>
-                  <p>vielen Dank für Ihre Kontaktanfrage. Wir haben Ihre Nachricht erhalten und werden uns schnellstmöglich bei Ihnen melden.</p>
-                  <div class="message">
-                    <strong>Ihre Anfrage:</strong><br>
-                    <strong>Leistung:</strong> ${escapeHtml(serviceName)}<br>
-                    ${phone ? `<strong>Telefon:</strong> ${escapeHtml(phone)}<br>` : ''}
-                    <strong>Nachricht:</strong><br>
-                    ${escapeHtml(message).replace(/\n/g, '<br>')}
+                  <div class="field">
+                    <div class="label">Name:</div>
+                  <div class="value">${escapeHtml(name)}</div>
                   </div>
-                  <p>Mit freundlichen Grüßen,<br>Miftar Berisha<br>Innenausbau Berisha</p>
-                </div>
-                <div class="footer">
-                  <p>Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht direkt auf diese E-Mail.</p>
-                  <p>Bei Fragen erreichen Sie uns über unser Kontaktformular oder telefonisch.</p>
+                  <div class="field">
+                    <div class="label">E-Mail:</div>
+                  <div class="value"><a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></div>
+                  </div>
+                  ${phone ? `
+                  <div class="field">
+                    <div class="label">Telefon:</div>
+                  <div class="value"><a href="tel:${escapeHtml(phone)}">${escapeHtml(phone)}</a></div>
+                  </div>
+                  ` : ''}
+                  <div class="field">
+                    <div class="label">Gewünschte Leistung:</div>
+                  <div class="value">${escapeHtml(serviceName)}</div>
+                  </div>
+                  <div class="field">
+                    <div class="label">Nachricht:</div>
+                  <div class="message-box">${escapeHtml(message).replace(/\n/g, '<br>')}</div>
+                  </div>
                 </div>
               </div>
             </body>
           </html>
         `
 
-        const confirmationText = `
+        const emailText = `
+Neue Kontaktanfrage
+
+Name: ${name}
+E-Mail: ${email}
+${phone ? `Telefon: ${phone}` : ''}
+Gewünschte Leistung: ${serviceName}
+
+Nachricht:
+${message}
+        `.trim()
+        
+        await resend.emails.send({
+        from: 'Berisha KG <info@berishakg.at>',
+        to: emailTo,
+          replyTo: email,
+        subject: `Neue Anfrage von ${name}`,
+          html: emailHtml,
+          text: emailText,
+        })
+
+      console.log('Email sent successfully to:', emailTo)
+
+      // Send confirmation email to the customer
+          try {
+            const confirmationHtml = `
+              <!DOCTYPE html>
+              <html>
+                <head>
+                  <meta charset="utf-8">
+                  <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                    .header { background-color: #0ea5e9; color: white; padding: 20px; text-align: center; }
+                    .content { background-color: #f9fafb; padding: 20px; border: 1px solid #e5e7eb; }
+                    .message { background-color: white; padding: 15px; border-left: 4px solid #0ea5e9; margin-top: 10px; }
+                    .footer { margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280; text-align: center; }
+                  </style>
+                </head>
+                <body>
+                  <div class="container">
+                    <div class="header">
+                      <h1>Vielen Dank für Ihre Anfrage!</h1>
+                    </div>
+                    <div class="content">
+                  <p>Sehr geehrte/r ${escapeHtml(name)},</p>
+                      <p>vielen Dank für Ihre Kontaktanfrage. Wir haben Ihre Nachricht erhalten und werden uns schnellstmöglich bei Ihnen melden.</p>
+                      <div class="message">
+                        <strong>Ihre Anfrage:</strong><br>
+                    <strong>Leistung:</strong> ${escapeHtml(serviceName)}<br>
+                    ${phone ? `<strong>Telefon:</strong> ${escapeHtml(phone)}<br>` : ''}
+                        <strong>Nachricht:</strong><br>
+                    ${escapeHtml(message).replace(/\n/g, '<br>')}
+                      </div>
+                  <p>Mit freundlichen Grüßen,<br>Miftar Berisha<br>Innenausbau Berisha</p>
+                    </div>
+                    <div class="footer">
+                      <p>Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht direkt auf diese E-Mail.</p>
+                      <p>Bei Fragen erreichen Sie uns über unser Kontaktformular oder telefonisch.</p>
+                    </div>
+                  </div>
+                </body>
+              </html>
+            `
+
+            const confirmationText = `
 Vielen Dank für Ihre Anfrage!
 
 Sehr geehrte/r ${name},
@@ -414,32 +414,32 @@ Innenausbau Berisha
 
 ---
 Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht direkt auf diese E-Mail.
-        `.trim()
+            `.trim()
 
-        await resend.emails.send({
+            await resend.emails.send({
           from: 'Berisha KG <info@berishakg.at>',
-          to: email,
-          subject: `Bestätigung Ihrer Anfrage: ${serviceName}`,
-          html: confirmationHtml,
-          text: confirmationText,
-        })
+              to: email,
+              subject: `Bestätigung Ihrer Anfrage: ${serviceName}`,
+              html: confirmationHtml,
+              text: confirmationText,
+            })
 
-        console.log('Confirmation email sent successfully to:', email)
-      } catch (confirmationError) {
-        console.error('Failed to send confirmation email:', confirmationError)
-        // Don't fail the request if confirmation email fails
-      }
+            console.log('Confirmation email sent successfully to:', email)
+          } catch (confirmationError) {
+            console.error('Failed to send confirmation email:', confirmationError)
+            // Don't fail the request if confirmation email fails
+          }
 
       return NextResponse.json(
         { success: true },
         { status: 200 }
       )
-    } catch (emailError) {
-      console.error('Failed to send email:', emailError)
+      } catch (emailError) {
+        console.error('Failed to send email:', emailError)
       return NextResponse.json(
         { success: false, error: 'Fehler beim Senden der E-Mail. Bitte versuchen Sie es später erneut.' },
         { status: 500 }
-      )
+    )
     }
   } catch (error) {
     console.error('Contact form error:', error)

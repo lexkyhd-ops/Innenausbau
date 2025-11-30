@@ -110,3 +110,24 @@ body {
   animation: fadeInUp 0.6s ease-out both;
 }
 
+/* Pulse Animation for Background Container */
+@keyframes pulseBlue {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 0.95;
+    filter: brightness(1.05);
+  }
+}
+
+.pulse-blue {
+  animation: pulseBlue 4s ease-in-out infinite;
+}
+
+/* Shadow without offset */
+.shadow-no-offset {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.05);
+}
+

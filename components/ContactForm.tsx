@@ -191,7 +191,7 @@ export default function ContactForm() {
               className="checkmark" 
               xmlns="http://www.w3.org/2000/svg" 
               viewBox="0 0 52 52"
-              style={{ width: '128px', height: '128px' }}
+            style={{ width: '128px', height: '128px' }} 
             >
               <circle 
                 className="checkmark-circle" 

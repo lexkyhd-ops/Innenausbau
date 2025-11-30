@@ -96,30 +96,25 @@ export default function StatisticsSection({ stats }: StatisticsSectionProps) {
   }, [])
 
   return (
-    <section ref={sectionRef} className="py-16 bg-white">
+    <section ref={sectionRef} className="py-12 sm:py-16 bg-white">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
           {stats.map((stat, index) => (
             <div 
               key={index} 
-              className="bg-white rounded-xl transition-all duration-300 p-3 sm:p-4 md:p-6 lg:p-8 text-center border border-gray-100 hover:-translate-y-1 overflow-hidden min-h-[100px] sm:min-h-[120px] md:min-h-[140px] flex flex-col justify-center"
-              style={{
-                boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 8px 2px rgba(0, 0, 0, 0.08), 0 1px 4px 1px rgba(0, 0, 0, 0.06)'
-              }}
-              onMouseEnter={(e) => {
-                if (typeof window !== 'undefined' && window.innerWidth >= 640) {
-                  e.currentTarget.style.boxShadow = '0 0 0 1px rgba(0, 0, 0, 0.05), 0 8px 20px 6px rgba(0, 0, 0, 0.15), 0 4px 10px 3px rgba(0, 0, 0, 0.12)'
-                }
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = '0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 8px 2px rgba(0, 0, 0, 0.08), 0 1px 4px 1px rgba(0, 0, 0, 0.06)'
-              }}
+              className="relative bg-gradient-to-br from-primary-50 via-white to-primary-50 rounded-2xl shadow-no-offset overflow-hidden border border-primary-100 pulse-blue transition-all duration-300 p-3 sm:p-4 md:p-6 lg:p-8 text-center hover:-translate-y-1 min-h-[100px] sm:min-h-[120px] md:min-h-[140px] flex flex-col justify-center"
             >
-              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-1 sm:mb-2 text-primary-600 leading-tight break-words">
-                <AnimatedNumber value={stat.value} suffix={stat.suffix} isVisible={isVisible} index={index} />
-              </div>
-              <div className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-700 font-medium leading-tight break-words px-1">
-                {stat.label}
+              {/* Decorative Elements */}
+              <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-primary-200/20 rounded-full -mr-12 sm:-mr-16 -mt-12 sm:-mt-16 blur-2xl"></div>
+              <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-32 sm:h-32 bg-primary-300/20 rounded-full -ml-12 sm:-ml-16 -mb-12 sm:-mb-16 blur-2xl"></div>
+              
+              <div className="relative z-10">
+                <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-1 sm:mb-2 text-primary-600 leading-tight break-words">
+                  <AnimatedNumber value={stat.value} suffix={stat.suffix} isVisible={isVisible} index={index} />
+                </div>
+                <div className="text-xs sm:text-sm md:text-base lg:text-lg text-gray-700 font-medium leading-tight break-words px-1">
+                  {stat.label}
+                </div>
               </div>
             </div>
           ))}
