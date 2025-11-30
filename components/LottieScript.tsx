@@ -10,9 +10,23 @@ export default function LottieScript() {
     // Prüfe Cookie-Consent
     const consent = localStorage.getItem('cookie-consent')
     // dotlottie ist für Animationen, kann als notwendig betrachtet werden
-    if (consent === 'all' || consent === 'necessary') {
+    // Lade es immer, da es für die Erfolgsanimation im Kontaktformular benötigt wird
+    if (consent === 'all' || consent === 'necessary' || !consent) {
       setHasConsent(true)
     }
+    
+    // Listen for consent changes
+    const handleStorageChange = () => {
+      const newConsent = localStorage.getItem('cookie-consent')
+      if (newConsent === 'all' || newConsent === 'necessary' || !newConsent) {
+        setHasConsent(true)
+      } else {
+        setHasConsent(false)
+      }
+    }
+    
+    window.addEventListener('storage', handleStorageChange)
+    return () => window.removeEventListener('storage', handleStorageChange)
   }, [])
 
   if (!hasConsent) {
@@ -23,8 +37,9 @@ export default function LottieScript() {
     <Script 
       src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.5/dist/dotlottie-wc.js" 
       type="module" 
-      strategy="lazyOnload"
+      strategy="afterInteractive"
     />
   )
 }
+
 

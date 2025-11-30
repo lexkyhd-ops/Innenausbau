@@ -20,6 +20,7 @@ export default function ContactForm() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
   const [errorMessage, setErrorMessage] = useState('')
   const [csrfToken, setCsrfToken] = useState('')
+  const [lottieReady, setLottieReady] = useState(false)
 
   // Generate CSRF token on mount
   useEffect(() => {
@@ -53,6 +54,43 @@ export default function ContactForm() {
         .catch(() => {}) // Fail silently, CSRF will be checked server-side
     }
   }, [])
+
+  // Check if dotlottie-wc is loaded
+  useEffect(() => {
+    const checkLottie = () => {
+      if (typeof window !== 'undefined' && customElements.get('dotlottie-wc')) {
+        setLottieReady(true)
+        return true
+      }
+      return false
+    }
+
+    // Check immediately
+    if (checkLottie()) return
+
+    // If not ready, wait for custom element to be defined
+    customElements.whenDefined('dotlottie-wc').then(() => {
+      setLottieReady(true)
+    })
+
+    // Fallback: check periodically
+    const interval = setInterval(() => {
+      if (checkLottie()) {
+        clearInterval(interval)
+      }
+    }, 100)
+
+    // Cleanup after 5 seconds
+    setTimeout(() => {
+      clearInterval(interval)
+      // Set ready anyway to show fallback
+      if (!lottieReady) {
+        setLottieReady(true)
+      }
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [lottieReady])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -185,11 +223,19 @@ export default function ContactForm() {
     return (
       <div className="bg-green-50 border-2 border-green-400 rounded-lg p-8 text-center">
         <div className="mb-4 flex justify-center">
-          <dotlottie-wc 
-            src="https://lottie.host/f68e4dbf-a7a1-4fc2-b23e-cdcb24cfc4de/o3cSAAtZRy.lottie" 
-            style={{ width: '128px', height: '128px' }} 
-            autoplay 
-          />
+          {lottieReady && typeof window !== 'undefined' && customElements.get('dotlottie-wc') ? (
+            <dotlottie-wc 
+              src="https://lottie.host/f68e4dbf-a7a1-4fc2-b23e-cdcb24cfc4de/o3cSAAtZRy.lottie" 
+              style={{ width: '128px', height: '128px' }} 
+              autoplay 
+            />
+          ) : (
+            <div className="w-32 h-32 flex items-center justify-center">
+              <svg className="w-24 h-24 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          )}
         </div>
         <h3 className="text-2xl font-bold text-green-800 mb-3">
           Vielen Dank!
