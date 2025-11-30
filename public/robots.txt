@@ -1,0 +1,12 @@
+# robots.txt for Innenausbauberisha KG
+User-agent: *
+Allow: /
+
+# Disallow admin and maintenance pages
+Disallow: /admin
+Disallow: /maintenance
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://www.berishakg.at/sitemap.xml
+

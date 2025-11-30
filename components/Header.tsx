@@ -48,9 +48,11 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-gray-700 hover:text-primary-600"
+            className="md:hidden text-gray-700 hover:text-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded p-1"
             onClick={toggleMenu}
-            aria-label="Menu"
+            aria-label={isMenuOpen ? 'Menü schließen' : 'Menü öffnen'}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
           >
             {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
           </button>
@@ -58,13 +60,13 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4">
+          <div id="mobile-menu" className="md:hidden mt-4 pb-4" role="navigation" aria-label="Hauptnavigation">
             <div className="flex flex-col space-y-3">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-gray-700 hover:text-primary-600 transition-colors font-medium py-2"
+                  className="text-gray-700 hover:text-primary-600 transition-colors font-medium py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 rounded px-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {link.label}

@@ -50,12 +50,18 @@ function getClientIP(request: NextRequest): string {
 
 // Handle OPTIONS for CORS preflight
 export async function OPTIONS(request: NextRequest) {
+  const origin = request.headers.get('origin')
+  // Only allow same-origin or specific trusted origins
+  const allowedOrigin = origin && origin.includes('berishakg.at') ? origin : 'https://www.berishakg.at'
+  
   return new NextResponse(null, {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': allowedOrigin,
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, X-CSRF-Token',
+      'Access-Control-Allow-Credentials': 'true',
+      'Access-Control-Max-Age': '86400',
     },
   })
 }
