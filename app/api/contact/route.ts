@@ -290,7 +290,7 @@ ${message}
                     <strong>Nachricht:</strong><br>
                     ${message.replace(/\n/g, '<br>')}
                   </div>
-                  <p>Mit freundlichen Grüßen,<br>Ihr Team von Innenausbau Berisha</p>
+                  <p>Mit freundlichen Grüßen,<br>Miftar Berisha<br>Innenausbau Berisha</p>
                 </div>
                 <div class="footer">
                   <p>Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht direkt auf diese E-Mail.</p>
@@ -315,7 +315,8 @@ Nachricht:
 ${message}
 
 Mit freundlichen Grüßen,
-Ihr Team von Innenausbau Berisha
+Miftar Berisha
+Innenausbau Berisha
 
 ---
 Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht direkt auf diese E-Mail.
