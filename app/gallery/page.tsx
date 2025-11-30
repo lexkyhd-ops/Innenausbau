@@ -2,6 +2,10 @@ import ImageGallery from '@/components/ImageGallery'
 import { getAllImages } from '@/lib/getImages'
 import GalleryFilters from '@/components/GalleryFilters'
 
+// Force dynamic rendering to ensure new folders are detected
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function Gallery() {
   // Automatically load all images from the folders
   const images = await getAllImages()
@@ -25,13 +29,13 @@ export default async function Gallery() {
         {/* Category Filter - Outside the box */}
         <GalleryFilters categories={categories} />
 
-        <div className="relative bg-gradient-to-br from-primary-50 via-white to-primary-50 rounded-2xl shadow-no-offset overflow-hidden border border-primary-100 pulse-blue">
+        <div className="relative bg-gradient-to-br from-primary-50 via-white to-primary-50 rounded-2xl shadow-no-offset border border-primary-100 pulse-blue">
           {/* Decorative Elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary-200/20 rounded-full -mr-32 -mt-32 blur-3xl"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-primary-300/20 rounded-full -ml-32 -mb-32 blur-3xl"></div>
           
-          <div className="relative z-10 p-6 sm:p-8 md:p-10">
-        <ImageGallery images={images} categories={categories} />
+          <div className="relative z-10 p-6 sm:p-8 md:p-10 overflow-hidden rounded-lg">
+            <ImageGallery images={images} categories={categories} />
           </div>
         </div>
       </div>
