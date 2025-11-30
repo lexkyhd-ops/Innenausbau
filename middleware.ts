@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
 
   // Allow access to maintenance and API routes
   if (
-    pathname.startsWith('/api/admin') ||
+    pathname.startsWith('/api') ||
     pathname.startsWith('/maintenance') ||
     pathname.startsWith('/_next') ||
     pathname.startsWith('/images') ||
