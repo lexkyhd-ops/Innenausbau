@@ -74,21 +74,22 @@ export default function ContactForm() {
       return
     }
     
-    // Get reCAPTCHA token (only if available)
+    // Get reCAPTCHA token (only if available and properly configured)
     let recaptchaToken = ''
-    if (executeRecaptcha) {
+    const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+    const secretKey = process.env.RECAPTCHA_SECRET_KEY
+
+    // Only use reCAPTCHA if both keys are configured
+    const useRecaptcha = siteKey && secretKey && executeRecaptcha
+
+    if (useRecaptcha) {
       try {
         recaptchaToken = await executeRecaptcha('contact_form')
       } catch (error) {
         console.error('reCAPTCHA error:', error)
-        // Only fail if reCAPTCHA is required (keys are set)
-        const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
-        if (siteKey) {
-          setSubmitStatus('error')
-          setErrorMessage('reCAPTCHA-Validierung fehlgeschlagen. Bitte versuchen Sie es erneut.')
-          return
-        }
-        // If no site key, continue without reCAPTCHA (development mode)
+        setSubmitStatus('error')
+        setErrorMessage('reCAPTCHA-Validierung fehlgeschlagen. Bitte versuchen Sie es erneut.')
+        return
       }
     }
     

@@ -169,10 +169,15 @@ export async function POST(request: NextRequest) {
     service = sanitizeService(service.trim())
     message = sanitizeHtml(message.trim())
 
-    // Verify reCAPTCHA token (only if secret key is configured)
+    // Verify reCAPTCHA token (only if both keys are configured)
     const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY
-    if (recaptchaSecret) {
-      // If secret is set, token is required
+    const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+
+    // Only validate reCAPTCHA if both keys are configured
+    const useRecaptcha = recaptchaSecret && recaptchaSiteKey
+
+    if (useRecaptcha) {
+      // If reCAPTCHA is enabled, token is required
       if (!recaptchaToken) {
         return NextResponse.json(
           { success: false, error: 'reCAPTCHA-Validierung fehlgeschlagen.' },
@@ -192,7 +197,7 @@ export async function POST(request: NextRequest) {
         )
 
         const recaptchaData = await recaptchaResponse.json()
-        
+
         if (!recaptchaData.success) {
           console.error('reCAPTCHA verification failed:', recaptchaData)
           return NextResponse.json(
@@ -216,8 +221,8 @@ export async function POST(request: NextRequest) {
         // In production, you might want to be stricter
       }
     } else {
-      // If no secret key is set, skip reCAPTCHA validation (development mode)
-      console.warn('reCAPTCHA_SECRET_KEY not set - skipping validation')
+      // If reCAPTCHA keys are not configured, skip validation
+      console.log('reCAPTCHA not configured - skipping validation')
     }
 
     // Map service values to readable names (whitelist approach)
