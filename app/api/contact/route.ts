@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
 import { sanitizeHtml, sanitizeEmail, sanitizePhone, sanitizeService, escapeHtml, validateLength, MAX_LENGTHS } from '@/lib/security'
 import { verifyCsrfToken } from '@/lib/csrf'
 
@@ -257,12 +257,16 @@ export async function POST(request: NextRequest) {
 
     const serviceName = serviceNames[service]
 
-    // Send email using Resend
-    const resendApiKey = process.env.RESEND_API_KEY
+    // Send email using SMTP
+    const smtpHost = process.env.SMTP_HOST
+    const smtpPort = parseInt(process.env.SMTP_PORT || '587')
+    const smtpUser = process.env.SMTP_USER
+    const smtpPass = process.env.SMTP_PASS
+    const emailFrom = process.env.EMAIL_FROM || 'info@berishakg.at'
     const emailTo = process.env.EMAIL_TO
 
-    if (!resendApiKey) {
-      console.error('RESEND_API_KEY is not set')
+    if (!smtpHost || !smtpUser || !smtpPass) {
+      console.error('SMTP configuration is incomplete')
       return NextResponse.json(
         { success: false, error: 'E-Mail-Service nicht konfiguriert.' },
         { status: 500 }
@@ -278,7 +282,19 @@ export async function POST(request: NextRequest) {
     }
 
       try {
-        const resend = new Resend(resendApiKey)
+        // Create SMTP transporter
+        const transporter = nodemailer.createTransport({
+          host: smtpHost,
+          port: smtpPort,
+          secure: smtpPort === 465, // true for 465, false for other ports
+          auth: {
+            user: smtpUser,
+            pass: smtpPass,
+          },
+          tls: {
+            rejectUnauthorized: false, // Allow self-signed certificates if needed
+          },
+        })
 
         const emailHtml = `
           <!DOCTYPE html>
@@ -341,12 +357,12 @@ Gewünschte Leistung: ${serviceName}
 Nachricht:
 ${message}
         `.trim()
-        
-        await resend.emails.send({
-        from: 'Berisha KG <info@berishakg.at>',
-        to: emailTo,
+
+        await transporter.sendMail({
+          from: `Berisha KG <${emailFrom}>`,
+          to: emailTo,
           replyTo: email,
-        subject: `Neue Anfrage von ${name}`,
+          subject: `Neue Anfrage von ${name}`,
           html: emailHtml,
           text: emailText,
         })
@@ -416,8 +432,8 @@ Innenausbau Berisha
 Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht direkt auf diese E-Mail.
             `.trim()
 
-            await resend.emails.send({
-          from: 'Berisha KG <info@berishakg.at>',
+            await transporter.sendMail({
+              from: `Berisha KG <${emailFrom}>`,
               to: email,
               subject: `Bestätigung Ihrer Anfrage: ${serviceName}`,
               html: confirmationHtml,
@@ -436,11 +452,11 @@ Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht direkt auf d
       )
       } catch (emailError) {
         console.error('Failed to send email:', emailError)
-      return NextResponse.json(
-        { success: false, error: 'Fehler beim Senden der E-Mail. Bitte versuchen Sie es später erneut.' },
-        { status: 500 }
-    )
-    }
+        return NextResponse.json(
+          { success: false, error: 'Fehler beim Senden der E-Mail. Bitte versuchen Sie es später erneut.' },
+          { status: 500 }
+        )
+      }
   } catch (error) {
     console.error('Contact form error:', error)
     return NextResponse.json(
