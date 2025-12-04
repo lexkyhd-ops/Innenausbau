@@ -4,7 +4,8 @@ import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
 import { ReactNode, useEffect, useState } from 'react'
 
 export default function ReCaptchaProvider({ children }: { children: ReactNode }) {
-  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''
+  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY
   const [hasConsent, setHasConsent] = useState(false)
 
   useEffect(() => {
@@ -16,7 +17,8 @@ export default function ReCaptchaProvider({ children }: { children: ReactNode })
     }
   }, [])
 
-  if (!siteKey || !hasConsent) {
+  // Only load reCAPTCHA if both keys are configured and consent is given
+  if (!siteKey || !secretKey || !hasConsent) {
     return <>{children}</>
   }
 

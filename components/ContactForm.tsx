@@ -79,18 +79,21 @@ export default function ContactForm() {
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
     const secretKey = process.env.RECAPTCHA_SECRET_KEY
 
-    // Only use reCAPTCHA if both keys are configured
+    // Only use reCAPTCHA if both keys are configured AND provider is available
     const useRecaptcha = siteKey && secretKey && executeRecaptcha
 
     if (useRecaptcha) {
       try {
         recaptchaToken = await executeRecaptcha('contact_form')
+        console.log('reCAPTCHA token generated successfully')
       } catch (error) {
         console.error('reCAPTCHA error:', error)
         setSubmitStatus('error')
         setErrorMessage('reCAPTCHA-Validierung fehlgeschlagen. Bitte versuchen Sie es erneut.')
         return
       }
+    } else {
+      console.log('reCAPTCHA not configured or not available - skipping')
     }
     
     setIsSubmitting(true)
