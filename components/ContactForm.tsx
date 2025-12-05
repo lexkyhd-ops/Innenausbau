@@ -95,7 +95,13 @@ export default function ContactForm() {
     } else {
       console.log('reCAPTCHA not configured or not available - skipping')
     }
-    
+
+    console.log('Sending form data:', {
+      hasToken: !!recaptchaToken,
+      tokenLength: recaptchaToken?.length,
+      useRecaptcha
+    })
+
     setIsSubmitting(true)
 
     try {

@@ -176,6 +176,13 @@ export async function POST(request: NextRequest) {
     // Only validate reCAPTCHA if both keys are configured
     const useRecaptcha = recaptchaSecret && recaptchaSiteKey
 
+    console.log('reCAPTCHA config check:', {
+      hasSecret: !!recaptchaSecret,
+      hasSiteKey: !!recaptchaSiteKey,
+      useRecaptcha,
+      hasToken: !!recaptchaToken
+    })
+
     if (useRecaptcha) {
       // If reCAPTCHA is enabled, token is required
       if (!recaptchaToken) {
