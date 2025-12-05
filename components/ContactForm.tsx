@@ -80,7 +80,7 @@ export default function ContactForm() {
     const secretKey = process.env.RECAPTCHA_SECRET_KEY
 
     // Only use reCAPTCHA if both keys are configured AND provider is available
-    const useRecaptcha = siteKey && secretKey && executeRecaptcha
+    const useRecaptcha = !!(siteKey && secretKey && executeRecaptcha)
 
     if (useRecaptcha) {
       try {
@@ -99,7 +99,10 @@ export default function ContactForm() {
     console.log('Sending form data:', {
       hasToken: !!recaptchaToken,
       tokenLength: recaptchaToken?.length,
-      useRecaptcha
+      useRecaptcha,
+      siteKey: !!siteKey,
+      secretKey: !!secretKey,
+      executeRecaptcha: !!executeRecaptcha
     })
 
     setIsSubmitting(true)

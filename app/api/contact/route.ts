@@ -104,8 +104,18 @@ export async function POST(request: NextRequest) {
     }
     let { name, email, phone, service, message, recaptchaToken, honeypot } = body
 
+    console.log('Received form data:', {
+      hasName: !!name,
+      hasEmail: !!email,
+      hasService: !!service,
+      hasMessage: !!message,
+      hasHoneypot: !!honeypot,
+      honeypotValue: honeypot
+    })
+
     // Honeypot check - if filled, it's a bot
     if (honeypot) {
+      console.log('Honeypot triggered - bot detected')
       return NextResponse.json(
         { success: false, error: 'Bot erkannt' },
         { status: 400 }
@@ -113,7 +123,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Server-side validation and sanitization
+    console.log('Validating name:', { name, type: typeof name, length: name?.length })
     if (!name || typeof name !== 'string' || name.trim().length < 2) {
+      console.log('Name validation failed')
       return NextResponse.json(
         { success: false, error: 'Name ist erforderlich und muss mindestens 2 Zeichen lang sein.' },
         { status: 400 }
@@ -121,13 +133,16 @@ export async function POST(request: NextRequest) {
     }
 
     if (!validateLength('name', name)) {
+      console.log('Name length validation failed')
       return NextResponse.json(
         { success: false, error: `Name darf maximal ${MAX_LENGTHS.name} Zeichen lang sein.` },
         { status: 400 }
       )
     }
 
+    console.log('Validating email:', { email, type: typeof email })
     if (!email || typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      console.log('Email validation failed')
       return NextResponse.json(
         { success: false, error: 'Gültige E-Mail-Adresse ist erforderlich.' },
         { status: 400 }
