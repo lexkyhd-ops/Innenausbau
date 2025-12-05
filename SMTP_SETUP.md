@@ -4,17 +4,38 @@ Das Kontaktformular wurde von Resend auf SMTP umgestellt. Um E-Mails zu versende
 
 ## Erforderliche SMTP-Umgebungsvariablen
 
+### Für lokale Entwicklung:
 Erstelle eine `.env.local`-Datei im Projektroot mit folgenden Variablen:
 
 ```env
 # SMTP Configuration
-SMTP_HOST=smtp.gmail.com
+SMTP_HOST=w020f8d7.kasserver.com
 SMTP_PORT=587
-SMTP_USER=deine-email@gmail.com
-SMTP_PASS=dein-app-passwort
+SMTP_USER=rechnungen@berishakg.at
+SMTP_PASS=6aQP3G3PynxMoetYCiK9
 EMAIL_FROM=info@berishakg.at
 EMAIL_TO=kontakt@berishakg.at
 ```
+
+### Für Live-Deployment:
+**WICHTIG:** Diese Variablen müssen in deiner Hosting-Plattform gesetzt werden!
+
+#### Bei Vercel:
+1. Gehe zu Vercel Dashboard → Dein Projekt → Settings → Environment Variables
+2. Füge diese Variablen hinzu:
+   - `SMTP_HOST`: `w020f8d7.kasserver.com`
+   - `SMTP_PORT`: `587`
+   - `SMTP_USER`: `rechnungen@berishakg.at`
+   - `SMTP_PASS`: `6aQP3G3PynxMoetYCiK9`
+   - `EMAIL_FROM`: `info@berishakg.at`
+   - `EMAIL_TO`: `kontakt@berishakg.at`
+3. Entferne `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` falls vorhanden
+4. Redeploy die App
+
+#### Bei Netlify:
+1. Gehe zu Netlify Dashboard → Dein Projekt → Site settings → Environment variables
+2. Füge die gleichen Variablen hinzu
+3. Redeploy die App
 
 ## SMTP-Anbieter Beispiele
 
