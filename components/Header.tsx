@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { FiMenu, FiX } from 'react-icons/fi'
-import logoTextBlack from '@/app/images/LogoTextBlack.png'
+import LogoFinal from '@/app/images/LogoFinal.png'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -24,10 +24,10 @@ export default function Header() {
       <nav className="container mx-auto pl-0 pr-4 md:pl-2 md:pr-4 py-2">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center">
-            <Image 
-              src={logoTextBlack} 
-              alt="Innenausbauberisha" 
-              width={300} 
+            <Image
+              src={LogoFinal}
+              alt="Innenausbauberisha"
+              width={300}
               height={60}
               className="h-12 md:h-16 lg:h-20 w-auto"
             />
