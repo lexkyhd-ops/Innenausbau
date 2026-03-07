@@ -40,7 +40,6 @@ export default function RotatingGallery({ imagesByCategory, interval = 4000 }: R
 
   // Rotate images
   useEffect(() => {
-    console.log('[RotatingGallery] Setting up rotation timers', { categories: categories.join(','), interval })
     if (categories.length === 0) return
 
     const cleanupFunctions: (() => void)[] = []
@@ -50,90 +49,58 @@ export default function RotatingGallery({ imagesByCategory, interval = 4000 }: R
       if (!images || images.length <= 1) return
 
       const startDelay = categoryIndex * 1000
-      console.log(`[RotatingGallery] Setting up timer for ${category}, startDelay: ${startDelay}ms`)
 
       const startTimer = setTimeout(() => {
-        console.log(`[RotatingGallery] Starting rotation for ${category}`)
         const rotate = () => {
           const isCurrentlyTransitioning = transitionRef.current[category]
-          console.log(`[RotatingGallery] rotate() called for ${category}, isTransitioning: ${isCurrentlyTransitioning}`)
-          
+
           // Skip if transition is already active
-          if (isCurrentlyTransitioning) {
-            console.log(`[RotatingGallery] ⚠️ Skipping ${category} - transition already active`)
-            return
-          }
+          if (isCurrentlyTransitioning) return
 
           // Get current index from ref (always up to date)
           const current = displayIndexRef.current[category] ?? 0
           const next = (current + 1) % images.length
 
-          console.log(`[RotatingGallery] 🎬 Starting transition for ${category}: ${current} -> ${next}`)
-
           // Mark transition as active IMMEDIATELY (before any state updates)
           transitionRef.current[category] = true
-          console.log(`[RotatingGallery] Set isTransitioning[${category}] = true`)
 
           // Set target index to trigger transition (outside of setDisplayIndex)
-          setTargetIndex((prevTarget) => {
-            const newTarget = {
-              ...prevTarget,
-              [category]: next,
-            }
-            console.log(`[RotatingGallery] Set targetIndex for ${category}:`, newTarget)
-            return newTarget
-          })
+          setTargetIndex((prevTarget) => ({
+            ...prevTarget,
+            [category]: next,
+          }))
 
           // After fade completes, update indices and clear flag together
           setTimeout(() => {
-            console.log(`[RotatingGallery] ✅ Transition complete for ${category}, updating displayIndex to ${next}`)
-            
             // Update ref first
             displayIndexRef.current[category] = next
-            
+
             // Clear transition flag IMMEDIATELY before state updates
             // This prevents rendering with displayIdx === targetIdx while isTransitioning is true
             transitionRef.current[category] = false
-            console.log(`[RotatingGallery] Set isTransitioning[${category}] = false`)
-            
+
             // Update both states together - React will batch these
-            setDisplayIndex((prev) => {
-              const updated = {
-                ...prev,
-                [category]: next,
-              }
-              console.log(`[RotatingGallery] Updated displayIndex for ${category}:`, updated)
-              return updated
-            })
-            
-            setTargetIndex((prev) => {
-              const synced = {
-                ...prev,
-                [category]: next,
-              }
-              console.log(`[RotatingGallery] Synced targetIndex for ${category}:`, synced)
-              return synced
-            })
+            setDisplayIndex((prev) => ({
+              ...prev,
+              [category]: next,
+            }))
+
+            setTargetIndex((prev) => ({
+              ...prev,
+              [category]: next,
+            }))
           }, 1000) // Match CSS transition duration (1s)
         }
 
         // Initial call
         const intervalId = setInterval(rotate, interval)
-        console.log(`[RotatingGallery] Created interval for ${category}, interval: ${interval}ms`)
-        cleanupFunctions.push(() => {
-          console.log(`[RotatingGallery] Cleaning up interval for ${category}`)
-          clearInterval(intervalId)
-        })
+        cleanupFunctions.push(() => clearInterval(intervalId))
       }, startDelay)
 
-      cleanupFunctions.push(() => {
-        console.log(`[RotatingGallery] Cleaning up startTimer for ${category}`)
-        clearTimeout(startTimer)
-      })
+      cleanupFunctions.push(() => clearTimeout(startTimer))
     })
 
     return () => {
-      console.log('[RotatingGallery] Cleanup: clearing all timers')
       cleanupFunctions.forEach((cleanup) => cleanup())
     }
   }, [categories.join(','), interval]) // Removed imagesByCategory from deps
@@ -149,11 +116,6 @@ export default function RotatingGallery({ imagesByCategory, interval = 4000 }: R
         const displayIdx = displayIndex[category] ?? 0
         const targetIdx = targetIndex[category] ?? 0
         const isTransitioning = transitionRef.current[category] ?? false
-
-        // Debug log on render
-        if (isTransitioning) {
-          console.log(`[RotatingGallery] 🎨 Rendering ${category}: displayIdx=${displayIdx}, targetIdx=${targetIdx}, isTransitioning=${isTransitioning}`)
-        }
 
         // During transition: displayIdx shows current (fading out), targetIdx shows next (fading in)
         // After transition: displayIdx and targetIdx should be the same, nextImage is for preloading
