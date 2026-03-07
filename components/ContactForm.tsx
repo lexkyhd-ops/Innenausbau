@@ -74,36 +74,20 @@ export default function ContactForm() {
       return
     }
     
-    // Get reCAPTCHA token (only if available and properly configured)
+    // Get reCAPTCHA token (only if site key is set and provider is available; secret is server-only)
     let recaptchaToken = ''
     const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
-    const secretKey = process.env.RECAPTCHA_SECRET_KEY
-
-    // Only use reCAPTCHA if both keys are configured AND provider is available
-    const useRecaptcha = !!(siteKey && secretKey && executeRecaptcha)
+    const useRecaptcha = !!(siteKey && executeRecaptcha)
 
     if (useRecaptcha) {
       try {
         recaptchaToken = await executeRecaptcha('contact_form')
-        console.log('reCAPTCHA token generated successfully')
-      } catch (error) {
-        console.error('reCAPTCHA error:', error)
+      } catch {
         setSubmitStatus('error')
         setErrorMessage('reCAPTCHA-Validierung fehlgeschlagen. Bitte versuchen Sie es erneut.')
         return
       }
-    } else {
-      console.log('reCAPTCHA not configured or not available - skipping')
     }
-
-    console.log('Sending form data:', {
-      hasToken: !!recaptchaToken,
-      tokenLength: recaptchaToken?.length,
-      useRecaptcha,
-      siteKey: !!siteKey,
-      secretKey: !!secretKey,
-      executeRecaptcha: !!executeRecaptcha
-    })
 
     setIsSubmitting(true)
 
@@ -134,8 +118,6 @@ export default function ContactForm() {
       // Check if response has content
       const contentType = response.headers.get('content-type')
       if (!contentType || !contentType.includes('application/json')) {
-        const text = await response.text()
-        console.error('Non-JSON response:', text)
         setSubmitStatus('error')
         setErrorMessage(`Server-Fehler (${response.status}): Bitte versuchen Sie es später erneut.`)
         setIsSubmitting(false)
@@ -149,8 +131,7 @@ export default function ContactForm() {
           throw new Error('Empty response')
         }
         data = JSON.parse(text)
-      } catch (parseError) {
-        console.error('JSON parse error:', parseError)
+      } catch {
         setSubmitStatus('error')
         setErrorMessage('Ungültige Server-Antwort. Bitte versuchen Sie es erneut.')
         setIsSubmitting(false)
@@ -182,7 +163,6 @@ export default function ContactForm() {
         honeypot: '',
       })
     } catch (error) {
-      console.error('Form submission error:', error)
       setSubmitStatus('error')
       setErrorMessage(
         error instanceof Error 

@@ -84,7 +84,6 @@ export async function POST(request: NextRequest) {
     // Only enforce CSRF if secret exists (user has visited page and got token)
     if (csrfSecret) {
       if (!csrfToken || !verifyCsrfToken(csrfSecret, csrfToken)) {
-        console.error('CSRF validation failed', { hasToken: !!csrfToken, hasSecret: !!csrfSecret })
         return NextResponse.json(
           { success: false, error: 'Ungültige Anfrage. Bitte laden Sie die Seite neu.' },
           { status: 403 }
@@ -95,8 +94,7 @@ export async function POST(request: NextRequest) {
     let body
     try {
       body = await request.json()
-    } catch (parseError) {
-      console.error('JSON parse error:', parseError)
+    } catch {
       return NextResponse.json(
         { success: false, error: 'Ungültige Anfrage-Daten.' },
         { status: 400 }
@@ -104,18 +102,8 @@ export async function POST(request: NextRequest) {
     }
     let { name, email, phone, service, message, recaptchaToken, honeypot } = body
 
-    console.log('Received form data:', {
-      hasName: !!name,
-      hasEmail: !!email,
-      hasService: !!service,
-      hasMessage: !!message,
-      hasHoneypot: !!honeypot,
-      honeypotValue: honeypot
-    })
-
     // Honeypot check - if filled, it's a bot
     if (honeypot) {
-      console.log('Honeypot triggered - bot detected')
       return NextResponse.json(
         { success: false, error: 'Bot erkannt' },
         { status: 400 }
@@ -123,9 +111,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Server-side validation and sanitization
-    console.log('Validating name:', { name, type: typeof name, length: name?.length })
     if (!name || typeof name !== 'string' || name.trim().length < 2) {
-      console.log('Name validation failed')
       return NextResponse.json(
         { success: false, error: 'Name ist erforderlich und muss mindestens 2 Zeichen lang sein.' },
         { status: 400 }
@@ -133,16 +119,13 @@ export async function POST(request: NextRequest) {
     }
 
     if (!validateLength('name', name)) {
-      console.log('Name length validation failed')
       return NextResponse.json(
         { success: false, error: `Name darf maximal ${MAX_LENGTHS.name} Zeichen lang sein.` },
         { status: 400 }
       )
     }
 
-    console.log('Validating email:', { email, type: typeof email })
     if (!email || typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      console.log('Email validation failed')
       return NextResponse.json(
         { success: false, error: 'Gültige E-Mail-Adresse ist erforderlich.' },
         { status: 400 }
@@ -191,13 +174,6 @@ export async function POST(request: NextRequest) {
     // Only validate reCAPTCHA if both keys are configured
     const useRecaptcha = recaptchaSecret && recaptchaSiteKey
 
-    console.log('reCAPTCHA config check:', {
-      hasSecret: !!recaptchaSecret,
-      hasSiteKey: !!recaptchaSiteKey,
-      useRecaptcha,
-      hasToken: !!recaptchaToken
-    })
-
     if (useRecaptcha) {
       // If reCAPTCHA is enabled, token is required
       if (!recaptchaToken) {
@@ -221,7 +197,6 @@ export async function POST(request: NextRequest) {
         const recaptchaData = await recaptchaResponse.json()
 
         if (!recaptchaData.success) {
-          console.error('reCAPTCHA verification failed:', recaptchaData)
           return NextResponse.json(
             { success: false, error: 'reCAPTCHA-Validierung fehlgeschlagen. Bitte versuchen Sie es erneut.' },
             { status: 400 }
@@ -231,20 +206,14 @@ export async function POST(request: NextRequest) {
         // Score threshold: 0.3 is more lenient (0.0 = bot, 1.0 = human)
         // Lower threshold allows more legitimate users through
         if (recaptchaData.score !== undefined && recaptchaData.score < 0.3) {
-          console.warn('reCAPTCHA score too low:', recaptchaData.score)
           return NextResponse.json(
             { success: false, error: 'reCAPTCHA-Validierung fehlgeschlagen. Bitte versuchen Sie es erneut.' },
             { status: 400 }
           )
         }
-      } catch (error) {
-        console.error('reCAPTCHA API error:', error)
+      } catch {
         // Don't block submission if reCAPTCHA API is down
-        // In production, you might want to be stricter
       }
-    } else {
-      // If reCAPTCHA keys are not configured, skip validation
-      console.log('reCAPTCHA not configured - skipping validation')
     }
 
     // Map service values to readable names (whitelist approach)
@@ -293,7 +262,6 @@ export async function POST(request: NextRequest) {
     const emailTo = process.env.EMAIL_TO
 
     if (!smtpHost || !smtpUser || !smtpPass) {
-      console.error('SMTP configuration is incomplete')
       return NextResponse.json(
         { success: false, error: 'E-Mail-Service nicht konfiguriert.' },
         { status: 500 }
@@ -301,7 +269,6 @@ export async function POST(request: NextRequest) {
     }
 
     if (!emailTo) {
-      console.error('EMAIL_TO is not set')
       return NextResponse.json(
         { success: false, error: 'Empfänger-E-Mail nicht konfiguriert.' },
         { status: 500 }
@@ -394,8 +361,6 @@ ${message}
           text: emailText,
         })
 
-      console.log('Email sent successfully to:', emailTo)
-
       // Send confirmation email to the customer
           try {
             const confirmationHtml = `
@@ -467,9 +432,7 @@ Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht direkt auf d
               text: confirmationText,
             })
 
-            console.log('Confirmation email sent successfully to:', email)
-          } catch (confirmationError) {
-            console.error('Failed to send confirmation email:', confirmationError)
+          } catch {
             // Don't fail the request if confirmation email fails
           }
 
@@ -477,15 +440,13 @@ Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht direkt auf d
         { success: true },
         { status: 200 }
       )
-      } catch (emailError) {
-        console.error('Failed to send email:', emailError)
+      } catch {
         return NextResponse.json(
           { success: false, error: 'Fehler beim Senden der E-Mail. Bitte versuchen Sie es später erneut.' },
           { status: 500 }
         )
       }
-  } catch (error) {
-    console.error('Contact form error:', error)
+  } catch {
     return NextResponse.json(
       { success: false, error: 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.' },
       { status: 500 }
