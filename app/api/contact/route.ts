@@ -7,8 +7,8 @@ import { verifyCsrfToken } from '@/lib/csrf'
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
 
 const RATE_LIMIT = {
-  maxRequests: 3, // Max 3 requests
-  windowMs: 60 * 60 * 1000, // Per hour (1 hour)
+  maxRequests: 10, // Max 10 requests per hour per IP
+  windowMs: 60 * 60 * 1000, // 1 hour
 }
 
 function checkRateLimit(ip: string): boolean {

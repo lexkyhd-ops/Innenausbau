@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import titleImage from '@/app/images/TitleImage.jpg'
+
+const HERO_IMAGE =
+  'https://images.pexels.com/photos/11427092/pexels-photo-11427092.jpeg'
 
 export default function Hero() {
   return (
@@ -8,7 +10,7 @@ export default function Hero() {
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src={titleImage}
+          src={HERO_IMAGE}
           alt="Innenausbauberisha"
           fill
           className="object-cover"

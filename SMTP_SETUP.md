@@ -8,12 +8,12 @@ Das Kontaktformular wurde von Resend auf SMTP umgestellt. Um E-Mails zu versende
 Erstelle eine `.env.local`-Datei im Projektroot mit folgenden Variablen:
 
 ```env
-# SMTP Configuration
+# SMTP Configuration – alles über kontakt@berishakg.at
 SMTP_HOST=w020f8d7.kasserver.com
 SMTP_PORT=587
-SMTP_USER=rechnungen@berishakg.at
-SMTP_PASS=6aQP3G3PynxMoetYCiK9
-EMAIL_FROM=info@berishakg.at
+SMTP_USER=kontakt@berishakg.at
+SMTP_PASS=dein-postfach-passwort
+EMAIL_FROM=kontakt@berishakg.at
 EMAIL_TO=kontakt@berishakg.at
 ```
 
@@ -22,12 +22,12 @@ EMAIL_TO=kontakt@berishakg.at
 
 #### Bei Vercel:
 1. Gehe zu Vercel Dashboard → Dein Projekt → Settings → Environment Variables
-2. Füge diese Variablen hinzu:
+2. Füge diese Variablen hinzu (alles über ein Postfach „kontakt“):
    - `SMTP_HOST`: `w020f8d7.kasserver.com`
    - `SMTP_PORT`: `587`
-   - `SMTP_USER`: `rechnungen@berishakg.at`
-   - `SMTP_PASS`: `6aQP3G3PynxMoetYCiK9`
-   - `EMAIL_FROM`: `info@berishakg.at`
+   - `SMTP_USER`: `kontakt@berishakg.at`
+   - `SMTP_PASS`: Passwort des Postfachs kontakt@berishakg.at
+   - `EMAIL_FROM`: `kontakt@berishakg.at`
    - `EMAIL_TO`: `kontakt@berishakg.at`
 3. Entferne `NEXT_PUBLIC_RECAPTCHA_SITE_KEY` falls vorhanden
 4. Redeploy die App
