@@ -188,18 +188,23 @@ export default function Datenschutz() {
 
           <section>
             <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              4. E-Mail-Versand
+              4. E-Mail-Versand (Kontaktformular)
             </h2>
             <p>
-              Für den Versand von E-Mails über das Kontaktformular verwenden wir den Dienst Resend (Resend Inc., 
-              548 Market St, PMB 72296, San Francisco, CA 94104-5401, USA). Ihre Kontaktdaten werden zur Bearbeitung 
-              Ihrer Anfrage an Resend übermittelt und dort verarbeitet.
+              Für den Versand von E-Mails aus dem Kontaktformular (Zustellung Ihrer Anfrage an uns und ggf. eine 
+              automatische Bestätigungs-E-Mail an die von Ihnen angegebene Adresse) nutzen wir den üblichen Versandweg 
+              per SMTP über die E-Mail-Infrastruktur unseres Hosting- bzw. E-Mail-Anbieters.
             </p>
             <p className="mt-2">
-              Weitere Informationen zur Datenverarbeitung durch Resend finden Sie unter: 
-              <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline ml-1">
-                https://resend.com/legal/privacy-policy
-              </a>
+              Die dafür erforderlichen Daten (insbesondere Name, E-Mail-Adresse, Inhalt der Nachricht) werden nur 
+              verarbeitet, soweit dies für die Übermittlung und Bearbeitung Ihrer Anfrage technisch notwendig ist. 
+              Einzelheiten zur Verarbeitung durch den jeweiligen Anbieter ergeben sich aus dessen Datenschutzerklärung, 
+              sofern dieser als Auftragsverarbeiter tätig wird.
+            </p>
+            <p className="mt-2">
+              <strong>Rechtsgrundlage:</strong> Art. 6 Abs. 1 lit. b DSGVO (Vertragsanbahnung bzw. vorvertragliche 
+              Maßnahmen) und Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer zuverlässigen Bearbeitung 
+              von Kontaktanfragen).
             </p>
           </section>
 
@@ -276,7 +281,7 @@ export default function Datenschutz() {
               Favoritenstraße 155 22-24<br />
               1100 Wien<br />
               Österreich<br />
-              E-Mail: miftar@berishakg.at<br />
+              E-Mail: info@berishakg.at<br />
               Telefon: +436641325995
             </p>
           </section>
