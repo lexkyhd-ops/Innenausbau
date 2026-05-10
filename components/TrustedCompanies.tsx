@@ -3,6 +3,8 @@
 interface Company {
   name: string
   logo: string
+  /** Horizontales Logo – höhere Breite, keine festen Quadratmaße */
+  wide?: boolean
 }
 
 interface TrustedCompaniesProps {
@@ -39,7 +41,11 @@ export default function TrustedCompanies({ companies }: TrustedCompaniesProps) {
                 <img 
                   src={company.logo} 
                   alt={company.name} 
-                  className="w-16 h-16 sm:w-20 sm:h-20 object-contain mb-2 sm:mb-3 transition-all duration-300 hover:scale-110 rounded-lg bg-white p-1.5 sm:p-2 mx-auto" 
+                  className={
+                    company.wide
+                      ? 'w-full max-h-11 sm:max-h-14 md:max-h-16 object-contain object-center mb-2 sm:mb-3 transition-all duration-300 hover:scale-[1.02] rounded-lg bg-neutral-900 px-2 py-1.5 sm:px-3 sm:py-2 mx-auto'
+                      : 'w-16 h-16 sm:w-20 sm:h-20 object-contain mb-2 sm:mb-3 transition-all duration-300 hover:scale-110 rounded-lg bg-white p-1.5 sm:p-2 mx-auto'
+                  }
                   style={{
                     boxShadow: '0 1px 4px 1px rgba(0, 0, 0, 0.06), 0 1px 2px 0px rgba(0, 0, 0, 0.04)'
                   }}
