@@ -51,6 +51,11 @@ export default function Footer() {
                   Datenschutz
                 </Link>
               </li>
+              <li>
+                <Link href="/website-erstellung" className="text-sm sm:text-base text-gray-700 hover:text-primary-600 transition-colors">
+                  Website-Erstellung
+                </Link>
+              </li>
             </ul>
           </div>
 
