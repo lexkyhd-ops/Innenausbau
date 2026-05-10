@@ -27,12 +27,15 @@ export const WEBDESIGN_STUDIO_WEBSITE = ''
 /** Kontakt – leer blendet die E-Mail-Schaltfläche aus */
 export const WEBDESIGN_STUDIO_EMAIL = ''
 
-/** Anzeige im E-Mail-Button */
+/** Anzeige bei E-Mail-Button (kurz z.B. Vorname) */
 export const WEBDESIGN_STUDIO_EMAIL_BUTTON_NAME = 'Lindon'
 
-/** Optional: direkte Telefonnummer für Rückfragen zur Umsetzung (leer = kein Anrufen-Button) */
-export const WEBDESIGN_STUDIO_PHONE_DISPLAY = ''
-export const WEBDESIGN_STUDIO_PHONE_E164 = ''
+/** Einheitliche Kontaktbereich Überschrift (Anzeige) */
+export const WEBDESIGN_CONTACT_TO_ME_TITLE = 'Kontakt zu mir'
+
+/** Optional: direkte Telefonnummer für Rückfragen zur Umsetzung */
+export const WEBDESIGN_STUDIO_PHONE_DISPLAY = '+43 664 1325995'
+export const WEBDESIGN_STUDIO_PHONE_E164 = '+436641325995'
 
 export const WEBDESIGN_REFERENCE_PROJECTS: { label: string; url: string }[] = [
   { label: 'SPASA', url: 'https://spasa.at' },

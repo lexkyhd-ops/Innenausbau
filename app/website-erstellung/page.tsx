@@ -3,9 +3,9 @@ import Image from 'next/image'
 import type { Metadata } from 'next'
 import {
   SITE_NAME,
+  WEBDESIGN_CONTACT_TO_ME_TITLE,
   WEBDESIGN_REFERENCE_PROJECTS,
   WEBDESIGN_STUDIO_EMAIL,
-  WEBDESIGN_STUDIO_EMAIL_BUTTON_NAME,
   WEBDESIGN_STUDIO_HIGHLIGHTS,
   WEBDESIGN_STUDIO_INITIALS,
   WEBDESIGN_STUDIO_INTRO,
@@ -27,6 +27,7 @@ export default function WebsiteErstellungPage() {
   const hasWebsite = WEBDESIGN_STUDIO_WEBSITE.trim().length > 0
   const hasEmail = WEBDESIGN_STUDIO_EMAIL.trim().length > 0
   const hasPhone = WEBDESIGN_STUDIO_PHONE_E164.trim().length > 0
+  const hasDesignerContact = hasEmail || hasPhone
   const portraitPath = WEBDESIGN_STUDIO_PORTRAIT_PATH.trim()
 
   return (
@@ -110,42 +111,50 @@ export default function WebsiteErstellungPage() {
           Information, von wem dieser Webauftritt konzipiert und umgesetzt wurde.
         </p>
 
-        <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
+        <div className="mt-10 flex flex-col gap-6">
           {hasWebsite && (
             <a
               href={WEBDESIGN_STUDIO_WEBSITE.trim()}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-primary-500 px-8 py-3 text-center text-sm font-bold text-white shadow-md transition hover:bg-primary-600 hover:shadow-lg"
+              className="inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center rounded-xl bg-primary-500 px-8 py-3 text-center text-sm font-bold text-white shadow-md transition hover:bg-primary-600 hover:shadow-lg"
             >
               Portfolio &amp; Angebot
             </a>
           )}
-          {hasEmail && (
-            <a
-              href={`mailto:${WEBDESIGN_STUDIO_EMAIL.trim()}`}
-              className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-primary-500 px-8 py-3 text-center text-sm font-bold text-white shadow-md transition hover:bg-primary-600 hover:shadow-lg"
-            >
-              E-Mail an {WEBDESIGN_STUDIO_EMAIL_BUTTON_NAME}
-            </a>
+
+          {hasDesignerContact && (
+            <div className="rounded-2xl border border-primary-100 bg-gradient-to-br from-primary-50 via-white to-primary-50 p-6 shadow-sm">
+              <h2 className="text-lg font-semibold text-gray-800">{WEBDESIGN_CONTACT_TO_ME_TITLE}</h2>
+              <p className="mt-2 text-sm text-gray-600">
+                Bei Fragen zur Umsetzung dieser Website erreichen Sie mich wie folgt:
+              </p>
+              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                {hasEmail && (
+                  <a
+                    href={`mailto:${WEBDESIGN_STUDIO_EMAIL.trim()}`}
+                    className="inline-flex min-h-[48px] flex-1 min-w-[12rem] items-center justify-center rounded-xl bg-primary-500 px-6 py-3 text-center text-sm font-bold text-white shadow-md transition hover:bg-primary-600 hover:shadow-lg"
+                  >
+                    <span className="break-all text-left leading-snug">
+                      Per E-Mail: {WEBDESIGN_STUDIO_EMAIL.trim()}
+                    </span>
+                  </a>
+                )}
+                {hasPhone && (
+                  <a
+                    href={`tel:${WEBDESIGN_STUDIO_PHONE_E164.trim()}`}
+                    className="inline-flex min-h-[48px] flex-1 min-w-[12rem] items-center justify-center rounded-xl border-2 border-primary-600 bg-white px-8 py-3 text-center text-sm font-semibold text-primary-700 transition hover:bg-primary-600 hover:text-white"
+                  >
+                    Per Telefon: {WEBDESIGN_STUDIO_PHONE_DISPLAY}
+                  </a>
+                )}
+              </div>
+            </div>
           )}
-          {hasPhone && (
-            <a
-              href={`tel:${WEBDESIGN_STUDIO_PHONE_E164.trim()}`}
-              className="inline-flex min-h-[48px] items-center justify-center rounded-xl border-2 border-primary-600 bg-white px-8 py-3 text-center text-sm font-semibold text-primary-700 transition hover:bg-primary-600 hover:text-white"
-            >
-              Anrufen · {WEBDESIGN_STUDIO_PHONE_DISPLAY}
-            </a>
-          )}
-          <Link
-            href="/contact"
-            className="inline-flex min-h-[48px] items-center justify-center rounded-xl border-2 border-primary-600 bg-white px-8 py-3 text-center text-sm font-semibold text-primary-700 transition hover:bg-primary-600 hover:text-white"
-          >
-            Kontakt zum Betrieb
-          </Link>
+
           <Link
             href="/"
-            className="inline-flex min-h-[48px] items-center justify-center rounded-xl border border-gray-300 bg-white px-8 py-3 text-center text-sm font-semibold text-gray-700 transition hover:border-gray-400 hover:bg-gray-50"
+            className="inline-flex min-h-[48px] w-full sm:w-auto items-center justify-center rounded-xl border border-gray-300 bg-white px-8 py-3 text-center text-sm font-semibold text-gray-700 transition hover:border-gray-400 hover:bg-gray-50"
           >
             Zurück zu {SITE_NAME}
           </Link>
