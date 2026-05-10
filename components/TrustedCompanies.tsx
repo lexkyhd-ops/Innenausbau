@@ -5,6 +5,8 @@ interface Company {
   logo: string
   /** Horizontales Logo – höhere Breite, keine festen Quadratmaße */
   wide?: boolean
+  /** Dunkles Marken-Logo (z. B. schwarzer Hintergrund im PNG) */
+  darkTile?: boolean
 }
 
 interface TrustedCompaniesProps {
@@ -24,10 +26,10 @@ export default function TrustedCompanies({ companies }: TrustedCompaniesProps) {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 items-center mb-12">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-5 md:gap-4 lg:gap-6 items-center mb-12">
           {companies.map((company, i) => (
             <div
-              key={i}
+              key={company.name}
               className="relative bg-gradient-to-br from-primary-50 via-white to-primary-50 rounded-2xl shadow-no-offset overflow-hidden border border-primary-100 pulse-blue flex flex-col items-center justify-center p-4 sm:p-6 hover:scale-105 transition-all duration-300 animate-fade-in-up"
               style={{ 
                 animationDelay: `${i * 100}ms`
@@ -44,7 +46,9 @@ export default function TrustedCompanies({ companies }: TrustedCompaniesProps) {
                   className={
                     company.wide
                       ? 'w-full max-h-11 sm:max-h-14 md:max-h-16 object-contain object-center mb-2 sm:mb-3 transition-all duration-300 hover:scale-[1.02] rounded-lg bg-neutral-900 px-2 py-1.5 sm:px-3 sm:py-2 mx-auto'
-                      : 'w-16 h-16 sm:w-20 sm:h-20 object-contain mb-2 sm:mb-3 transition-all duration-300 hover:scale-110 rounded-lg bg-white p-1.5 sm:p-2 mx-auto'
+                      : company.darkTile
+                        ? 'w-16 h-16 sm:w-20 sm:h-20 object-contain mb-2 sm:mb-3 transition-all duration-300 hover:scale-110 rounded-lg bg-neutral-900 p-1.5 sm:p-2 mx-auto'
+                        : 'w-16 h-16 sm:w-20 sm:h-20 object-contain mb-2 sm:mb-3 transition-all duration-300 hover:scale-110 rounded-lg bg-white p-1.5 sm:p-2 mx-auto'
                   }
                   style={{
                     boxShadow: '0 1px 4px 1px rgba(0, 0, 0, 0.06), 0 1px 2px 0px rgba(0, 0, 0, 0.04)'

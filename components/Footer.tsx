@@ -51,11 +51,6 @@ export default function Footer() {
                   Datenschutz
                 </Link>
               </li>
-              <li>
-                <Link href="/website-erstellung" className="text-sm sm:text-base text-gray-700 hover:text-primary-600 transition-colors">
-                  Website-Erstellung
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -85,13 +80,17 @@ export default function Footer() {
 
         <div className="border-t border-gray-300 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-gray-600">
           <p className="text-xs sm:text-sm">&copy; {new Date().getFullYear()} Innenausbauberisha. Alle Rechte vorbehalten.</p>
-          <div className="mt-2 flex flex-wrap justify-center gap-3 sm:gap-4 text-xs sm:text-sm">
+          <div className="mt-2 flex flex-wrap justify-center items-center gap-x-3 sm:gap-x-4 gap-y-2 text-xs sm:text-sm">
             <Link href="/impressum" className="hover:text-primary-600 transition-colors">
               Impressum
             </Link>
-            <span>•</span>
+            <span aria-hidden>•</span>
             <Link href="/datenschutz" className="hover:text-primary-600 transition-colors">
               Datenschutz
+            </Link>
+            <span aria-hidden>•</span>
+            <Link href="/website-erstellung" className="hover:text-primary-600 transition-colors">
+              Website-Erstellung
             </Link>
           </div>
         </div>

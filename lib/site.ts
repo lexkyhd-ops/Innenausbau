@@ -19,7 +19,7 @@ export const WEBDESIGN_STUDIO_HIGHLIGHTS: string[] = [
 export const WEBDESIGN_STUDIO_INITIALS = 'L'
 
 /** Optionales Portrait unter `public/` (z. B. `/images/portrait.jpg`) – leer = Initialen */
-export const WEBDESIGN_STUDIO_PORTRAIT_PATH = ''
+export const WEBDESIGN_STUDIO_PORTRAIT_PATH = '/images/MeinBild.png'
 
 /** Öffentliche Website des Studios – leer blendet den Button aus */
 export const WEBDESIGN_STUDIO_WEBSITE = ''
