@@ -25,7 +25,7 @@ export const WEBDESIGN_STUDIO_PORTRAIT_PATH = '/images/MeinBild.png'
 export const WEBDESIGN_STUDIO_WEBSITE = ''
 
 /** Kontakt – leer blendet die E-Mail-Schaltfläche aus */
-export const WEBDESIGN_STUDIO_EMAIL = ''
+export const WEBDESIGN_STUDIO_EMAIL = 'lindon-berisha@hotmail.com'
 
 /** Anzeige bei E-Mail-Button (kurz z.B. Vorname) */
 export const WEBDESIGN_STUDIO_EMAIL_BUTTON_NAME = 'Lindon'
@@ -34,8 +34,8 @@ export const WEBDESIGN_STUDIO_EMAIL_BUTTON_NAME = 'Lindon'
 export const WEBDESIGN_CONTACT_TO_ME_TITLE = 'Kontakt zu mir'
 
 /** Optional: direkte Telefonnummer für Rückfragen zur Umsetzung */
-export const WEBDESIGN_STUDIO_PHONE_DISPLAY = '+43 664 1325995'
-export const WEBDESIGN_STUDIO_PHONE_E164 = '+436641325995'
+export const WEBDESIGN_STUDIO_PHONE_DISPLAY = '+43 681 20740364'
+export const WEBDESIGN_STUDIO_PHONE_E164 = '+4368120740364'
 
 export const WEBDESIGN_REFERENCE_PROJECTS: { label: string; url: string }[] = [
   { label: 'SPASA', url: 'https://spasa.at' },
