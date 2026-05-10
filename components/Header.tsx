@@ -20,7 +20,7 @@ export default function Header() {
   ]
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
+    <header className="bg-white shadow-md">
       <nav className="container mx-auto pl-0 pr-4 md:pl-2 md:pr-4 py-2">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center">

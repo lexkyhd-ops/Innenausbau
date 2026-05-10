@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Header from '@/components/Header'
+import TopContactBar from '@/components/TopContactBar'
 import Footer from '@/components/Footer'
 import ReCaptchaProvider from '@/components/ReCaptchaProvider'
 import CookieConsent from '@/components/CookieConsent'
@@ -79,7 +80,10 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <ReCaptchaProvider>
-          <Header />
+          <div className="sticky top-0 z-50">
+            <TopContactBar />
+            <Header />
+          </div>
           <main className="min-h-screen">
             {children}
           </main>
