@@ -12,7 +12,7 @@ export default function TopContactBar() {
       aria-label="Kontakt Kurzinfo"
     >
       <div className="container mx-auto px-4 py-2 sm:py-2.5">
-        <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-1.5 text-xs sm:text-sm font-medium">
+        <div className="flex flex-wrap items-center justify-start gap-x-8 gap-y-1.5 text-xs sm:text-sm font-medium">
           <a
             href={`tel:${PHONE_E164}`}
             className="inline-flex items-center gap-2 text-white hover:text-primary-100 transition-colors"
